@@ -16,7 +16,7 @@ qt_add_executable(appCustomer
 qt_add_qml_module(appCustomer
     URI Customer
     VERSION 1.0
-    QML_FILES Main.qml CustomButton.qml CloseButton.qml ReturnButton.qml
+    QML_FILES Main.qml CustomButton.qml CloseButton.qml ReturnButton.qml MainPage.qml LoginPage.qml RegisterPage.qml
     RESOURCES Images.qrc Fonts.qrc
 )
 
