@@ -109,7 +109,7 @@ Window {
                 button_radius: 25
                 button_text: "Вход"
                 text_color: "#452f2d"
-                text_color_hovered: "white"
+                text_color_hovered: "#b19877"
                 font_point_size: 15
                 rect_color: "white"
                 rect_color_hovered: "#452f2d"
@@ -130,7 +130,7 @@ Window {
                 button_radius: 25
                 button_text: "Регистрация"
                 text_color: "#452f2d"
-                text_color_hovered: "white"
+                text_color_hovered: "#b19877"
                 font_point_size: 15
                 rect_color: "white"
                 rect_color_hovered: "#452f2d"
@@ -151,7 +151,7 @@ Window {
                 button_radius: 25
                 button_text: "Выход"
                 text_color: "#452f2d"
-                text_color_hovered: "white"
+                text_color_hovered: "#b19877"
                 font_point_size: 15
                 rect_color: "white"
                 rect_color_hovered: "#452f2d"
