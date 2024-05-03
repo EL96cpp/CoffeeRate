@@ -5,7 +5,7 @@ project(Customer VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick Network Xml)
 
 qt_standard_project_setup()
 
@@ -18,6 +18,7 @@ qt_add_qml_module(appCustomer
     VERSION 1.0
     QML_FILES Main.qml CustomButton.qml CloseButton.qml ReturnButton.qml MainPage.qml LoginPage.qml RegisterPage.qml
     RESOURCES Images.qrc Fonts.qrc
+    SOURCES client.h client.cpp
 )
 
 
@@ -33,7 +34,7 @@ set_target_properties(appCustomer PROPERTIES
 )
 
 target_link_libraries(appCustomer
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Network Qt6::Xml
 )
 
 include(GNUInstallDirs)
