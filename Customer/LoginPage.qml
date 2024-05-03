@@ -94,7 +94,7 @@ Page {
 
                 anchors.left: login_nickname_line.left
                 anchors.top: parent.top
-                anchors.topMargin: login_nickname_input.font.pixelSize*3
+                anchors.topMargin: login_nickname_input.font.pixelSize*2
 
 
                 TextInput {

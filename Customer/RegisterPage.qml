@@ -316,6 +316,7 @@ Page {
     Connections {
 
         target: register_return_button
+
         function onReturnButtonClickedSignal() {
 
             register_nickname_input.clear();

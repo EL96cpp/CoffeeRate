@@ -60,7 +60,16 @@ Page {
         width: main_logo_rectangle.width - 50
         height: main_page.height/2
 
-        color: pale
+        gradient: Gradient {
+
+            GradientStop { position: 0.0; color: "#efede6" }
+            GradientStop { position: 0.7; color: "#a0efede6" }
+            GradientStop { position: 0.8; color: "#90efede6" }
+            GradientStop { position: 0.9; color: "#50efede6" }
+            GradientStop { position: 1.0; color: "#05efede6" }
+            orientation: Gradient.Vertical
+
+        }
 
         anchors.top: main_logo_rectangle.bottom
         anchors.horizontalCenter: parent.horizontalCenter
