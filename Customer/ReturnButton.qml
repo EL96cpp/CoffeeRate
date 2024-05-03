@@ -22,6 +22,8 @@ Item {
     property string lines_color
     property string lines_color_hovered
 
+    signal returnButtonClickedSignal();
+
     Rectangle {
 
         id: circle
@@ -160,6 +162,12 @@ Item {
         id: return_button_mouse_area
         hoverEnabled: true
         anchors.fill: parent
+
+        onClicked: {
+
+            returnButtonClickedSignal();
+
+        }
 
     }
 

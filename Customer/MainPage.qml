@@ -12,6 +12,9 @@ Page {
 
     visible: true
 
+    property int buttons_height: 50
+    property int buttons_margin: (main_menu_rectangle.height - buttons_height*3)/4
+
     Image {
 
         id: background_image
@@ -28,12 +31,12 @@ Page {
 
         width: main_window.width
         height: main_logo_text.paintedHeight
-        color: "#452f2d"
+        color: dark_brown
 
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.topMargin: main_page.height/8
+        anchors.topMargin: main_page.height/10
 
         Text {
 
@@ -55,12 +58,11 @@ Page {
 
         id: main_menu_rectangle
         width: main_logo_rectangle.width - 50
-        height: main_page.height/2.5
+        height: main_page.height/2
 
-        color: "#50351e1c"
+        color: pale
 
         anchors.top: main_logo_rectangle.bottom
-        anchors.topMargin: main_logo_rectangle.height/2
         anchors.horizontalCenter: parent.horizontalCenter
 
         CustomButton {
@@ -72,15 +74,15 @@ Page {
             border_width: 0
             button_radius: 25
             button_text: "Вход"
-            text_color: "#452f2d"
-            text_color_hovered: "#b19877"
+            text_color: light_sand
+            text_color_hovered: "white"
             font_point_size: 15
-            rect_color: "white"
-            rect_color_hovered: "#452f2d"
+            rect_color: light_brown
+            rect_color_hovered: orange
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: (main_window.height/3 - button_height*3)/4
+            anchors.topMargin: button_height
 
         }
 
@@ -93,15 +95,16 @@ Page {
             border_width: 0
             button_radius: 25
             button_text: "Регистрация"
-            text_color: "#452f2d"
-            text_color_hovered: "#b19877"
+            text_color: light_sand
+            text_color_hovered: "white"
             font_point_size: 15
-            rect_color: "white"
-            rect_color_hovered: "#452f2d"
+            rect_color: light_brown
+            rect_color_hovered: orange
+
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: login_button.bottom
-            anchors.topMargin: (main_window.height/3 - button_height*3)/4
+            anchors.topMargin: button_height
 
         }
 
@@ -114,15 +117,16 @@ Page {
             border_width: 0
             button_radius: 25
             button_text: "Выход"
-            text_color: "#452f2d"
-            text_color_hovered: "#b19877"
+            text_color: light_sand
+            text_color_hovered: "white"
             font_point_size: 15
-            rect_color: "white"
-            rect_color_hovered: "#452f2d"
+            rect_color: light_brown
+            rect_color_hovered: orange
+
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: register_button.bottom
-            anchors.topMargin: (main_window.height/3 - button_height*3)/4
+            anchors.topMargin: button_height
 
         }
 

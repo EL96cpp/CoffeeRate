@@ -15,6 +15,12 @@ Window {
     visible: true
     title: qsTr("CoffeeRate")
 
+    property string dark_brown: "#351e1c"
+    property string light_brown: "#452f2d"
+    property string light_sand: "#c8b69f"
+    property string orange: "#a55e47"
+    property string pale: "#efede6"
+
     FontLoader {
 
         id: logo_font
