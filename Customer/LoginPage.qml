@@ -138,6 +138,20 @@ Page {
                 }
             }
 
+            Text {
+
+                id: login_nickname_title
+
+                text: "Имя пользователя"
+                font.pointSize: 12
+                color: dark_brown
+
+                anchors.top: login_nickname_line.bottom
+                anchors.topMargin: 5
+                anchors.left: login_nickname_line.left
+
+            }
+
             Item {
 
                 id: login_password_input_item
@@ -192,6 +206,19 @@ Page {
                 }
             }
 
+            Text {
+
+                id: login_password_title
+
+                text: "Пароль"
+                font.pointSize: 12
+                color: dark_brown
+
+                anchors.top: login_password_line.bottom
+                anchors.topMargin: 5
+                anchors.left: login_password_line.left
+
+            }
 
 
             CustomButton {
