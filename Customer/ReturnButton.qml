@@ -5,9 +5,10 @@ import QtLocation
 import QtPositioning
 
 
+
 Item {
 
-    id: close_button
+    id: return_button
 
     width: circle_radius
     height: circle_radius
@@ -46,13 +47,13 @@ Item {
 
                 State {
                     name: "shown"
-                    when: close_button_mouse_area.containsMouse
+                    when: return_button_mouse_area.containsMouse
                     PropertyChanges { target: hovered_circle; width: circle_radius }
                 },
 
                 State {
                     name: "hidden"
-                    when: !close_button_mouse_area.containsMouse
+                    when: !return_button_mouse_area.containsMouse
                     PropertyChanges { target: hovered_circle; width: 0 }
                 }
 
@@ -67,28 +68,40 @@ Item {
 
         Rectangle {
 
-            id: left_line
+            id: central_line
             width: line_length
             height: line_width
-            color: close_button_mouse_area.containsMouse ? lines_color_hovered : lines_color
+            color: return_button_mouse_area.containsMouse ? lines_color_hovered : lines_color
 
             anchors.centerIn: parent
+
+        }
+
+        Rectangle {
+
+            id: upper_line
+            width: line_length/2
+            height: line_width
+            color: return_button_mouse_area.containsMouse ? lines_color_hovered : lines_color
+
+            anchors.verticalCenter: central_line.verticalCenter
+            anchors.left: central_line.left
 
             states: [
 
                 State {
 
                     name: "rotated"
-                    when: close_button_mouse_area.containsMouse
-                    PropertyChanges { target: left_line; rotation: 135 }
+                    when: return_button_mouse_area.containsMouse
+                    PropertyChanges { target: upper_line; rotation: -45; transformOrigin: Item.BottomLeft }
 
                 },
 
                 State {
 
                     name: "non-rotated"
-                    when: !close_button_mouse_area.containsMouse
-                    PropertyChanges { target: left_line; rotation: 0 }
+                    when: !return_button_mouse_area.containsMouse
+                    PropertyChanges { target: upper_line; rotation: 0; transformOrigin: Item.BottomLeft }
 
                 }
             ]
@@ -104,28 +117,29 @@ Item {
 
         Rectangle {
 
-            id: right_line
-            width: line_length
+            id: lower_line
+            width: line_length/2
             height: line_width
-            color: close_button_mouse_area.containsMouse ? lines_color_hovered : lines_color
+            color: return_button_mouse_area.containsMouse ? lines_color_hovered : lines_color
 
-            anchors.centerIn: parent
+            anchors.verticalCenter: central_line.verticalCenter
+            anchors.left: central_line.left
 
             states: [
 
                 State {
 
                     name: "rotated"
-                    when: close_button_mouse_area.containsMouse
-                    PropertyChanges { target: right_line; rotation: 45 }
+                    when: return_button_mouse_area.containsMouse
+                    PropertyChanges { target: lower_line; rotation: 45; transformOrigin: Item.BottomLeft }
 
                 },
 
                 State {
 
                     name: "non-rotated"
-                    when: !close_button_mouse_area.containsMouse
-                    PropertyChanges { target: right_line; rotation: 0 }
+                    when: !return_button_mouse_area.containsMouse
+                    PropertyChanges { target: lower_line; rotation: 0; transformOrigin: Item.BottomLeft }
 
                 }
             ]
@@ -143,32 +157,10 @@ Item {
 
     MouseArea {
 
-        id: close_button_mouse_area
+        id: return_button_mouse_area
         hoverEnabled: true
         anchors.fill: parent
 
     }
 
 }
-
-/*
-
-Example with great color palette for CloseButton item
-
-CloseButton {
-
-    id: close_button
-
-    circle_radius: 50
-    circle_color: "#452f2d"
-    circle_color_hovered: "#b19877"
-    line_width: 2
-    lines_color: "#b19877"
-    lines_color_hovered: "#efede6"
-
-    anchors.top: parent.top
-    anchors.right: parent.right
-    anchors.margins: 60
-
-}
-*/

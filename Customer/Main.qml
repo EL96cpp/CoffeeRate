@@ -199,5 +199,22 @@ Window {
 
     }
 
+    ReturnButton {
+
+        id: return_button
+
+        circle_radius: 50
+        circle_color: "#452f2d"
+        circle_color_hovered: "#b19877"
+        line_width: 2
+        lines_color: "#b19877"
+        lines_color_hovered: "#efede6"
+
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 60
+
+    }
+
 }
 
