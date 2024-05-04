@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QtXml>
+#include <QDebug>
 
 
 class Client : public QObject
