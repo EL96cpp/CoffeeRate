@@ -14,6 +14,8 @@ Page {
 
     property int input_line_thickness: 2
 
+    signal showEmptyFieldsError(var error_title, var error_text);
+
     Image {
 
         id: background_image
@@ -324,6 +326,25 @@ Page {
             register_password_confirmation_input.clear();
 
             stack_view.pop(main_page);
+
+        }
+
+    }
+
+    Connections {
+
+        target: register_register_button
+
+        function onButtonClickedSignal() {
+
+            if (register_nickname_input.text === "" ||
+                register_password_input.text === "" ||
+                register_password_confirmation_input.text === "") {
+
+                showEmptyFieldsError("Ошибка регистрации", "Заполните все\nнеобходимые поля!");
+
+            }
+
 
         }
 

@@ -14,6 +14,8 @@ Page {
 
     property int input_line_thickness: 2
 
+    signal showEmptyFieldsError(var message_title, var message_text);
+
     Image {
 
         id: background_image
@@ -260,6 +262,22 @@ Page {
 
         }
 
+    }
+
+    Connections {
+
+        target: login_login_button
+
+        function onButtonClickedSignal() {
+
+            if (login_nickname_input.text === "" || login_password_input.text === "") {
+
+                showEmptyFieldsError("Ошибка авторизации", "Заполните все\nнеобходимые поля!");
+
+            }
+
+
+        }
 
     }
 

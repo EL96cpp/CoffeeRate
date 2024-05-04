@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+
 class SqlService : public QObject
 {
     Q_OBJECT

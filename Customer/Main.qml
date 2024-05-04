@@ -4,8 +4,6 @@ import QtQuick.Layouts 1.3
 import QtLocation
 import QtPositioning
 
-
-
 Window {
 
     id: main_window
@@ -92,7 +90,9 @@ Window {
         id: register_page
     }
 
-
+    InfoMessage {
+        id: info_message
+    }
 
 
 }
