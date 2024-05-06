@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     Client client;
+    client.ConnectToServer("127.0.0.1", 8000);
 
     return app.exec();
 }

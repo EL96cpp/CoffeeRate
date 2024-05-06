@@ -13,7 +13,10 @@ class Client : public QObject {
 public:
     Client(QObject *parent = nullptr);
 
+    void ConnectToServer(const QString& address, const quint16& port);
+
 signals:
+    void errorMessage(const QString& error_title, const QString& error_description);
 
 public slots:
     void onLogin(const QString& nickname, const QString& password);
