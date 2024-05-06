@@ -5,12 +5,31 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QtXml>
+#include <thread>
 
-class Server : public QTcpServer
-{
+#include "sqlservice.h"
+#include "connection.h"
+#include "threadsafelist.h"
+#include "message.h"
+
+class Server : public QTcpServer {
     Q_OBJECT
 public:
     Server();
+
+    Server(const Server& other) = delete;
+    Server& operator = (const Server& other) = delete;
+
+private:
+    void ProcessMessages();
+    void RespondToMessage(std::shared_ptr<Message>&& message);
+
+private:
+    SqlService sql_service;
+    std::thread message_processing_thread;
+    ThreadSafeList<Connection> connections;
+    ThreadSafeList<Message> incoming_messages;
+
 };
 
 #endif // SERVER_H

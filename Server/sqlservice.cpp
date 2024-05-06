@@ -1,8 +1,6 @@
 #include "sqlservice.h"
 
-SqlService::SqlService(QObject *parent)
-    : QObject{parent}
-{}
+SqlService::SqlService(QObject *parent) : QObject{parent} {}
 
 LoginResult SqlService::Login(const QString &nickname, const QString &password) {
 
@@ -180,8 +178,8 @@ AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const Q
 CheckResult SqlService::CheckIfCafeRegistered(const CafeData& cafe_data) {
 
     QSqlQuery check_cafe_query(sql_database);
-    check_cafe_query.prepare("SELECT EXISTS (SELECT 1 FROM cafes WHERE name_of_cafe = (?), city = (?), street = (?), house_number = (?),"
-                             "latitude = (?), longitude = (?))");
+    check_cafe_query.prepare("SELECT EXISTS (SELECT 1 FROM cafes WHERE name_of_cafe = (?), city = (?), street = (?),"
+                             "house_number = (?), latitude = (?), longitude = (?))");
     check_cafe_query.addBindValue(cafe_data.GetName());
     check_cafe_query.addBindValue(cafe_data.GetCity());
     check_cafe_query.addBindValue(cafe_data.GetStreet());

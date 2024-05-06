@@ -57,7 +57,10 @@ class SqlService : public QObject {
 
     Q_OBJECT
 public:
-    explicit SqlService(QObject *parent = nullptr);
+    SqlService(QObject *parent = nullptr);
+
+    SqlService(const SqlService& other) = delete;
+    SqlService& operator = (const SqlService& other) = delete;
 
     LoginResult Login(const QString& nickname, const QString& password);
     RegisterResult Register(const QString& nickname, const QString& password);
