@@ -7,18 +7,18 @@
 #include <QDebug>
 
 
-class Client : public QObject
-{
+class Client : public QObject {
+
     Q_OBJECT
 public:
-    explicit Client(QObject *parent = nullptr);
+    Client(QObject *parent = nullptr);
 
 signals:
 
 public slots:
     void onLogin(const QString& nickname, const QString& password);
     void onRegister(const QString& nickname, const QString& password);
-
+    void onReadyRead();
 
 private:
     QTcpSocket* socket;

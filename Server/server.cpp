@@ -7,6 +7,8 @@ void Server::incomingConnection(qintptr handle) {
     std::shared_ptr<Connection> connection = std::make_shared<Connection>(this, handle, incoming_messages);
     connections.push_front(std::move(connection));
 
+    message_processing_thread = std::thread([](){});
+
 }
 
 
