@@ -21,6 +21,7 @@ public:
     Server& operator = (const Server& other) = delete;
 
 private:
+    void incomingConnection(qintptr handle);
     void ProcessMessages();
     void RespondToMessage(std::shared_ptr<Message>&& message);
 

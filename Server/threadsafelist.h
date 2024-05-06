@@ -7,8 +7,8 @@
 #include <condition_variable>
 #include <algorithm>
 
-#include "message.h"
-#include "connection.h"
+class Connection;
+class Message;
 
 template<typename T>
 concept HaveGetNicknameMethod = requires (T item) { item.GetNickname(); };
@@ -43,7 +43,7 @@ public:
 
     }
 
-    void push_fron(std::shared_ptr<T>&& item) {
+    void push_front(std::shared_ptr<T>&& item) {
 
         std::lock_guard lock(blocking_mutex);
 

@@ -2,6 +2,14 @@
 
 Server::Server() {}
 
+void Server::incomingConnection(qintptr handle) {
+
+    std::shared_ptr<Connection> connection = std::make_shared<Connection>(this, handle, incoming_messages);
+    connections.push_front(std::move(connection));
+
+}
+
+
 void Server::ProcessMessages() {
 
     incoming_messages.wait();
