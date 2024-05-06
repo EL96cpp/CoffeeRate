@@ -5,7 +5,6 @@ import QtLocation
 import QtPositioning
 
 
-
 Item {
 
     id: info_message

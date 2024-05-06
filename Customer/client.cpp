@@ -10,6 +10,8 @@ void Client::ConnectToServer(const QString &address, const quint16 &port) {
 
     socket->connectToHost(address, port);
 
+    socket->waitForConnected(3000);
+
     if (socket->state() != QAbstractSocket::ConnectedState) {
 
         emit errorMessage("Ошибка подключения", "Не удалось установить соединение с сервером");

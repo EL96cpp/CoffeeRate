@@ -20,6 +20,8 @@ public:
     Server(const Server& other) = delete;
     Server& operator = (const Server& other) = delete;
 
+    void StartListening(const quint16& port);
+
 private:
     void incomingConnection(qintptr handle);
     void ProcessMessages();

@@ -3,8 +3,8 @@
 
 #include "client.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
@@ -21,4 +21,5 @@ int main(int argc, char *argv[])
     client.ConnectToServer("127.0.0.1", 8000);
 
     return app.exec();
+
 }

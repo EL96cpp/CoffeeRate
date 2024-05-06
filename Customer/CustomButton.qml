@@ -5,7 +5,6 @@ import QtLocation
 import QtPositioning
 
 
-
 Item {
 
     id: custom_button

@@ -6,7 +6,6 @@
 #include <QtXml>
 #include <QDebug>
 
-
 class Client : public QObject {
 
     Q_OBJECT
