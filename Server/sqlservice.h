@@ -7,6 +7,8 @@
 #include <QSqlRecord>
 #include <QSqlError>
 
+#include "cafedata.h"
+
 enum class LoginResult {
 
     SUCCESS,
@@ -42,6 +44,14 @@ enum class AddCafeReviewResult {
 
 };
 
+enum class CheckResult {
+
+    TRUE,
+    FALSE,
+    DATABASE_ERROR
+
+};
+
 
 class SqlService : public QObject {
 
@@ -51,16 +61,15 @@ public:
 
     LoginResult Login(const QString& nickname, const QString& password);
     RegisterResult Register(const QString& nickname, const QString& password);
-    AddCafeResult AddNewCafe(const QString& name_of_cafe, const QString& city, const QString& street, const QString& house_number);
-    AddCafeReviewResult AddCafeReview(const QString& nickname, const QString& name_of_cafe, const QString& city, const QString& street,
-                                      const QString& house_number, const QString& star_rating, const QString& review_text);
+    AddCafeResult AddNewCafe(const CafeData& cafe_data);
+    AddCafeReviewResult AddCafeReview(const CafeData& cafe_data, const QString& nickname, const QString& star_rating, const QString& review_text);
 
 signals:
 
 
 private:
-    bool CheckIfCafeRegistered(const QString& name_of_cafe, const QString& city, const QString& street, const QString& house_number);
-    bool CheckIfNicknameExists(const QString& nickname);
+    CheckResult CheckIfCafeRegistered(const CafeData& cafe_data);
+    CheckResult CheckIfNicknameExists(const QString& nickname);
     bool CheckIfStarRatingCorrect(const QString& star_rating);
 
 private:
