@@ -1,6 +1,17 @@
 #include "message.h"
 
-Message::Message() {}
+Message::Message() : message_size(0) {
+
+    message_byte_array.clear();
+
+}
+
+Message::Message(const size_t &message_size, Connection* sender) : message_size(message_size),
+                                                                   sender(sender) {
+
+    message_byte_array.clear();
+
+}
 
 Message::Message(const size_t &message_size,
                  const QByteArray &message_byte_array,
@@ -21,6 +32,18 @@ void Message::SetMessageData(const size_t &message_size, const QByteArray &messa
 
     this->message_size = message_size;
     this->message_byte_array = message_byte_array;
+    this->sender = sender;
+
+}
+
+void Message::SetSize(const size_t &message_size) {
+
+    this->message_size = message_size;
+
+}
+
+void Message::SetSender(Connection *sender) {
+
     this->sender = sender;
 
 }

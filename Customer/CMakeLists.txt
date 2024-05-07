@@ -19,7 +19,7 @@ qt_add_qml_module(appCustomer
     QML_FILES Main.qml CustomButton.qml CloseButton.qml ReturnButton.qml MainPage.qml LoginPage.qml RegisterPage.qml
               InfoMessage.qml
     RESOURCES Images.qrc Fonts.qrc
-    SOURCES client.h client.cpp
+    SOURCES client.h client.cpp message.h message.cpp threadsafelist.h
 )
 
 

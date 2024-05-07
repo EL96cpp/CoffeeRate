@@ -6,6 +6,9 @@
 #include <QtXml>
 #include <QDebug>
 
+#include "message.h"
+#include "threadsafelist.h"
+
 class Client : public QObject {
 
     Q_OBJECT
@@ -24,6 +27,8 @@ public slots:
 
 private:
     QTcpSocket* socket;
+    std::shared_ptr<Message> temporary_message;
+    ThreadSafeList<Message> incoming_messages;
 
 };
 

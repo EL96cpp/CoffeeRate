@@ -8,6 +8,10 @@ Connection::Connection(QObject *parent, const quintptr& handler,
 
     socket->setSocketDescriptor(handler);
 
+    temporary_message = std::make_shared<Message>();
+
+    connect(socket, &QTcpSocket::readyRead, this, &Connection::OnReadyRead);
+
 }
 
 void Connection::SetNickname(const QString &nickname) {
@@ -37,8 +41,6 @@ void Connection::SendMessage(Message &message) {
 
 void Connection::OnReadyRead() {
 
-    Message message;
-
     if (temporary_message->GetSize() == 0) {
 
         QByteArray size_byte_array = socket->readLine();
@@ -54,25 +56,29 @@ void Connection::OnReadyRead() {
             if (temporary_message->IsReady()) {
 
                 incoming_messages.push_front(std::move(temporary_message));
+                temporary_message = std::make_shared<Message>();
 
             }
 
+        }
+
+    } else {
+
+        if (temporary_message->IsReady()) {
+
+            incoming_messages.push_front(std::move(temporary_message));
+            temporary_message = std::make_shared<Message>();
+
         } else {
+
+            QByteArray new_array = socket->readAll();
+
+            temporary_message->AppendToMessageByteArray(new_array);
 
             if (temporary_message->IsReady()) {
 
                 incoming_messages.push_front(std::move(temporary_message));
-
-            } else {
-
-                QByteArray new_array = socket->readAll();
-                temporary_message->AppendToMessageByteArray(new_array);
-
-                if (temporary_message->IsReady()) {
-
-                    incoming_messages.push_front(std::move(temporary_message));
-
-                }
+                temporary_message = std::make_shared<Message>();
 
             }
 

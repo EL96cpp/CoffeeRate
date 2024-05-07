@@ -7,11 +7,7 @@
 #include <condition_variable>
 #include <algorithm>
 
-class Connection;
 class Message;
-
-template<typename T>
-concept HaveGetNicknameMethod = requires (T item) { item.GetNickname(); };
 
 
 template<typename T>
@@ -26,15 +22,13 @@ public:
 
         std::lock_guard lock(blocking_mutex);
 
-        auto item = std::move(list.last());
+        auto& item = list.last();
         list.removeLast();
         return item;
 
     }
 
     void push_front(std::shared_ptr<T>& item) {
-
-        qDebug() << "Push front simple!";
 
         std::lock_guard lock(blocking_mutex);
 
@@ -46,8 +40,6 @@ public:
     }
 
     void push_front(std::shared_ptr<T>&& item) {
-
-        qDebug() << "Push front with move!";
 
         std::lock_guard lock(blocking_mutex);
 
@@ -68,26 +60,12 @@ public:
 
     void wait() {
 
-        qDebug() << "Wait called!";
-
         while (empty()) {
 
             std::unique_lock unique_lock(cv_mutex);
             condition_variable.wait(unique_lock);
 
         }
-
-    }
-
-    bool contains_user(const QString& nickname) requires ( HaveGetNicknameMethod<T> ) {
-
-        std::lock_guard lock(blocking_mutex);
-
-        auto iterator = std::find_if(list.begin(), list.end(), [&nickname](std::shared_ptr<T>& connection) {
-            return connection->GetNickname() == nickname;
-        });
-
-        return iterator == list.end();
 
     }
 

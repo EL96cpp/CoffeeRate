@@ -32,13 +32,19 @@ void Server::incomingConnection(qintptr handle) {
 
 void Server::ProcessMessages() {
 
-    incoming_messages.wait();
+    while (true) {
 
-    while (!incoming_messages.empty()) {
+        incoming_messages.wait();
 
-        auto message = incoming_messages.pop_back();
+        while (!incoming_messages.empty()) {
 
-        RespondToMessage(std::move(message));
+            qDebug() << "incoming message processing!";
+
+            auto message = incoming_messages.pop_back();
+
+            RespondToMessage(std::move(message));
+
+        }
 
     }
 
@@ -46,6 +52,6 @@ void Server::ProcessMessages() {
 
 void Server::RespondToMessage(std::shared_ptr<Message>&& message) {
 
-
+    qDebug() << message->GetMessageByteArray();
 
 }

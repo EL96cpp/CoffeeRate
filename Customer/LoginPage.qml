@@ -274,6 +274,10 @@ Page {
 
                 showEmptyFieldsError("Ошибка авторизации", "Заполните все\nнеобходимые поля!");
 
+            } else {
+
+                Client.onLogin(login_nickname_input.text, login_password_input.text);
+
             }
 
 
