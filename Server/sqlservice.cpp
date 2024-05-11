@@ -1,6 +1,17 @@
 #include "sqlservice.h"
 
-SqlService::SqlService(QObject *parent) : QObject{parent} {}
+SqlService::SqlService(QObject *parent) : QObject{parent}, sql_database(QSqlDatabase::addDatabase("QPSQL")) {
+
+    sql_database.setHostName("127.0.0.1");
+    sql_database.setPort(5432);
+    sql_database.setDatabaseName("coffee_rate");
+    sql_database.setUserName("postgres");
+    sql_database.setPassword("postgres");
+    bool started = sql_database.open();
+
+    qDebug() << started;
+
+}
 
 LoginResult SqlService::Login(const QString &nickname, const QString &password) {
 

@@ -39,6 +39,12 @@ void Connection::SendMessage(Message &message) {
 
 }
 
+void Connection::SendMessage(const QByteArray &message) {
+
+    socket->write(message);
+
+}
+
 void Connection::OnReadyRead() {
 
     if (temporary_message->GetSize() == 0) {

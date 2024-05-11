@@ -27,9 +27,13 @@ private:
     void ProcessMessages();
     void RespondToMessage(std::shared_ptr<Message>&& message);
 
+    QByteArray Login(const QString& nickname, const QString& password);
+    QByteArray Register(const QString& nickname, const QString& password);
+
 private:
     SqlService sql_service;
-    std::thread message_processing_thread;
+    std::thread message_processing_thread2;
+    QThread message_processing_thread;
     ThreadSafeList<Connection> connections;
     ThreadSafeList<Message> incoming_messages;
 

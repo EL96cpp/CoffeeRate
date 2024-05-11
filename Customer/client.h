@@ -26,6 +26,10 @@ public slots:
     void onReadyRead();
 
 private:
+    void ProcessMessages();
+    void RespondToMessage(const QByteArray& message_byte_array);
+
+private:
     QTcpSocket* socket;
     std::shared_ptr<Message> temporary_message;
     ThreadSafeList<Message> incoming_messages;

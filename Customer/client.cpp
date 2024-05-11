@@ -140,3 +140,29 @@ void Client::onReadyRead() {
     }
 
 }
+
+void Client::ProcessMessages() {
+
+    while (true) {
+
+        incoming_messages.wait();
+
+        while (!incoming_messages.empty()) {
+
+            qDebug() << "incoming message processing!";
+
+            auto message = incoming_messages.pop_back();
+
+            RespondToMessage(message->GetMessageByteArray());
+
+        }
+
+    }
+
+}
+
+void Client::RespondToMessage(const QByteArray &message_byte_array) {
+
+    qDebug() << message_byte_array;
+
+}

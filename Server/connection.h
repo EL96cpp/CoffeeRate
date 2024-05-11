@@ -19,6 +19,7 @@ public:
     QString GetNickname();
     bool IsLoggedIn();
     void SendMessage(Message& message);
+    void SendMessage(const QByteArray& message);
 
 signals:
 

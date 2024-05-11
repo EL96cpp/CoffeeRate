@@ -78,7 +78,6 @@ private:
 private:
     QSqlDatabase sql_database;
 
-
 };
 
 #endif // SQLSERVICE_H
