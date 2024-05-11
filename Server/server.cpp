@@ -52,6 +52,21 @@ void Server::ProcessMessages() {
 
 void Server::RespondToMessage(std::shared_ptr<Message>&& message) {
 
-    qDebug() << message->GetMessageByteArray();
+    QByteArray message_byte_array = message->GetMessageByteArray();
+
+
+    QDomDocument document;
+    document.setContent(message_byte_array);
+
+    QDomElement root = document.firstChildElement();
+
+    QDomNodeList children_nodes = root.childNodes();
+
+    qDebug() << children_nodes.at(0).toElement().attribute("Action");
+
+    QDomElement login_data = children_nodes.at(1).toElement();
+
+    qDebug() << login_data.attribute("Nickname") << " " << login_data.attribute("Password");
+
 
 }

@@ -49,7 +49,7 @@ void Connection::OnReadyRead() {
 
         if (socket->bytesAvailable() != 0) {
 
-            QByteArray message_byte_array = socket->readAll();
+            QByteArray message_byte_array = socket->read(socket->bytesAvailable());
 
             temporary_message = std::make_shared<Message>(message_size, message_byte_array, this);
 
@@ -71,7 +71,7 @@ void Connection::OnReadyRead() {
 
         } else {
 
-            QByteArray new_array = socket->readAll();
+            QByteArray new_array = socket->read(socket->bytesAvailable());
 
             temporary_message->AppendToMessageByteArray(new_array);
 
