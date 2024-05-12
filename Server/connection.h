@@ -14,6 +14,8 @@ class Connection : public QObject {
 public:
     Connection(QObject *parent, const quintptr& handler, ThreadSafeList<Message>& incoming_messages);
 
+    Connection(Connection& other) = delete;
+
     void SetNickname(const QString& nickname);
 
     QString GetNickname();

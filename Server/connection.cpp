@@ -8,7 +8,7 @@ Connection::Connection(QObject *parent, const quintptr& handler,
 
     socket->setSocketDescriptor(handler);
 
-    temporary_message = std::make_shared<Message>();
+    temporary_message = std::make_shared<Message>(this);
 
     connect(socket, &QTcpSocket::readyRead, this, &Connection::OnReadyRead);
 
@@ -34,6 +34,8 @@ bool Connection::IsLoggedIn() {
 
 void Connection::SendMessage(Message &message) {
 
+    qDebug() << "Send message call!";
+
     QByteArray byte_array = message.GetMessageByteArray();
     byte_array.prepend(QString::number(message.GetSize()).toUtf8() + "\n");
 
@@ -41,7 +43,11 @@ void Connection::SendMessage(Message &message) {
 
 void Connection::SendMessage(const QByteArray &message) {
 
+    qDebug() << "Send message call!";
+
     socket->write(message);
+
+    qDebug() << "Send message call ended!";
 
 }
 
@@ -61,8 +67,8 @@ void Connection::OnReadyRead() {
 
             if (temporary_message->IsReady()) {
 
-                incoming_messages.push_front(std::move(temporary_message));
-                temporary_message = std::make_shared<Message>();
+                incoming_messages.push_front(temporary_message);
+                temporary_message = std::make_shared<Message>(this);
 
             }
 
@@ -72,8 +78,8 @@ void Connection::OnReadyRead() {
 
         if (temporary_message->IsReady()) {
 
-            incoming_messages.push_front(std::move(temporary_message));
-            temporary_message = std::make_shared<Message>();
+            incoming_messages.push_front(temporary_message);
+            temporary_message = std::make_shared<Message>(this);
 
         } else {
 
@@ -83,8 +89,8 @@ void Connection::OnReadyRead() {
 
             if (temporary_message->IsReady()) {
 
-                incoming_messages.push_front(std::move(temporary_message));
-                temporary_message = std::make_shared<Message>();
+                incoming_messages.push_front(temporary_message);
+                temporary_message = std::make_shared<Message>(this);
 
             }
 

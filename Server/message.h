@@ -9,7 +9,7 @@ class Connection;
 class Message {
 
 public:
-    Message();
+    Message(Connection* sender);
     Message(const size_t& message_size, Connection* sender);
     Message(const size_t& message_size, const QByteArray& message_byte_array, Connection* sender);
     Message(Message&& other);

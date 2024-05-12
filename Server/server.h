@@ -6,11 +6,14 @@
 #include <QTcpSocket>
 #include <QtXml>
 #include <thread>
+#include <atomic>
 
 #include "sqlservice.h"
 #include "connection.h"
 #include "threadsafelist.h"
 #include "message.h"
+#include "messageresponder.h"
+
 
 class Server : public QTcpServer {
     Q_OBJECT
@@ -24,14 +27,9 @@ public:
 
 private:
     void incomingConnection(qintptr handle);
-    void ProcessMessages();
-    void RespondToMessage(std::shared_ptr<Message>&& message);
-
-    QByteArray Login(const QString& nickname, const QString& password);
-    QByteArray Register(const QString& nickname, const QString& password);
 
 private:
-    SqlService sql_service;
+    std::atomic<unsigned long long> sql_connections_counter;
     std::thread message_processing_thread2;
     QThread message_processing_thread;
     ThreadSafeList<Connection> connections;

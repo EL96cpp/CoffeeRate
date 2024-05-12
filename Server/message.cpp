@@ -1,6 +1,6 @@
 #include "message.h"
 
-Message::Message() : message_size(0) {
+Message::Message(Connection* sender) : sender(sender), message_size(0) {
 
     message_byte_array.clear();
 
@@ -73,6 +73,8 @@ bool Message::IsReady() {
 }
 
 Connection* Message::GetSender() {
+
+    qDebug() << "Get sender call!";
 
     return sender;
 
