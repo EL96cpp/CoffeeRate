@@ -22,7 +22,7 @@ public:
 
         std::lock_guard lock(blocking_mutex);
 
-        auto& item = list.last();
+        auto item = std::move(list.last());
         list.removeLast();
         return item;
 
@@ -42,6 +42,8 @@ public:
     void push_front(std::shared_ptr<T>&& item) {
 
         std::lock_guard lock(blocking_mutex);
+
+        qDebug() << item->GetMessageByteArray();
 
         list.push_front(std::move(item));
 

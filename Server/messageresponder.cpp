@@ -112,6 +112,9 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
     size_t message_size = message_byte_array.size();
     message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
 
+    qDebug() << "Will send message signal!";
+    qDebug() << message_byte_array;
+
     emit MessageResponceReady(message_byte_array);
 
 }
@@ -162,6 +165,9 @@ void MessageResponder::Register(const QString &nickname, const QString &password
 
     size_t message_size = message_byte_array.size();
     message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
+
+    qDebug() << "Will send message signal!";
+    qDebug() << message_byte_array;
 
     emit MessageResponceReady(message_byte_array);
 

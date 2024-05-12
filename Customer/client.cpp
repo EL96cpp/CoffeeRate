@@ -4,6 +4,11 @@ Client::Client(QObject *parent) : QObject{parent}, socket(new QTcpSocket(this)) 
 
     connect(socket, &QTcpSocket::readyRead, this, &Client::onReadyRead);
 
+    temporary_message = std::make_shared<Message>();
+
+    message_processing_thread = std::thread(&Client::ProcessMessages, this);
+    message_processing_thread.detach();
+
 }
 
 void Client::ConnectToServer(const QString &address, const quint16 &port) {
@@ -80,15 +85,19 @@ void Client::onRegister(const QString &nickname, const QString &password) {
 
 void Client::onReadyRead() {
 
+    qDebug() << "On ready read called!";
+
     if (temporary_message->GetSize() == 0) {
+
 
         QByteArray size_byte_array = socket->readLine();
         size_byte_array.removeLast();
         size_t message_size = size_byte_array.toInt();
 
+
         if (socket->bytesAvailable() != 0) {
 
-            QByteArray message_byte_array = socket->readAll();
+            QByteArray message_byte_array = socket->read(socket->bytesAvailable());
 
             temporary_message = std::make_shared<Message>(message_size, message_byte_array);
 
@@ -100,43 +109,21 @@ void Client::onReadyRead() {
 
             }
 
-        } else {
-
-            temporary_message = std::make_shared<Message>(message_size);
-
         }
 
     } else {
 
-        if (socket->bytesAvailable() != 0) {
+        if (temporary_message->IsReady()) {
 
-            if (temporary_message->IsReady()) {
+            incoming_messages.push_front(std::move(temporary_message));
 
-                incoming_messages.push_front(std::move(temporary_message));
-
-                QByteArray size_byte_array = socket->readLine();
-                size_byte_array.removeLast();
-                size_t message_size = size_byte_array.toInt();
-
-                temporary_message = std::make_shared<Message>(message_size);
-
-            } else {
-
-                QByteArray message_byte_array = socket->readAll();
-
-                temporary_message->AppendToMessageByteArray(message_byte_array);
-
-                if (temporary_message->IsReady()) {
-
-                    incoming_messages.push_front(std::move(temporary_message));
-
-                    temporary_message = std::make_shared<Message>();
-
-                }
-
-            }
+            temporary_message = std::make_shared<Message>();
 
         } else {
+
+            QByteArray new_array = socket->read(socket->bytesAvailable());
+
+            temporary_message->AppendToMessageByteArray(new_array);
 
             if (temporary_message->IsReady()) {
 
@@ -173,6 +160,8 @@ void Client::ProcessMessages() {
 }
 
 void Client::RespondToMessage(const QByteArray &message_byte_array) {
+
+    qDebug() << "Respond to message";
 
     qDebug() << message_byte_array;
 

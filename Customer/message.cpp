@@ -23,10 +23,19 @@ Message::Message(Message &&other) : message_size(other.message_size),
 
 }
 
+Message::Message(const Message& other) : message_size(other.message_size),
+                                         message_byte_array(other.message_byte_array) {}
+
 void Message::SetMessageData(const size_t &message_size, const QByteArray &message_byte_array) {
 
     this->message_size = message_size;
     this->message_byte_array = message_byte_array;
+
+}
+
+void Message::SetSize(const size_t& message_size) {
+
+    this->message_size = message_size;
 
 }
 

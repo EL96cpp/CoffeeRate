@@ -62,6 +62,9 @@ void Connection::OnReadyRead() {
 
                 MessageResponder* message_responder = new MessageResponder(this, temporary_message->GetMessageByteArray(),
                                                                            connections, sql_connections_counter);
+
+                connect(message_responder, &MessageResponder::MessageResponceReady, this, &Connection::SendMessage);
+
                 QThreadPool::globalInstance()->start(message_responder);
 
                 ++sql_connections_counter;
@@ -77,6 +80,9 @@ void Connection::OnReadyRead() {
 
             MessageResponder* message_responder = new MessageResponder(this, temporary_message->GetMessageByteArray(),
                                                                        connections, sql_connections_counter);
+
+            connect(message_responder, &MessageResponder::MessageResponceReady, this, &Connection::SendMessage);
+
             QThreadPool::globalInstance()->start(message_responder);
 
             ++sql_connections_counter;
@@ -92,6 +98,9 @@ void Connection::OnReadyRead() {
 
                 MessageResponder* message_responder = new MessageResponder(this, temporary_message->GetMessageByteArray(),
                                                                            connections, sql_connections_counter);
+
+                connect(message_responder, &MessageResponder::MessageResponceReady, this, &Connection::SendMessage);
+
                 QThreadPool::globalInstance()->start(message_responder);
 
                 ++sql_connections_counter;

@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QtXml>
 #include <QDebug>
+#include <thread>
 
 #include "message.h"
 #include "threadsafelist.h"
@@ -31,6 +32,7 @@ private:
 
 private:
     QTcpSocket* socket;
+    std::thread message_processing_thread;
     std::shared_ptr<Message> temporary_message;
     ThreadSafeList<Message> incoming_messages;
 
