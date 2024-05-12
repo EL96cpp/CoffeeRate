@@ -2,15 +2,15 @@
 
 Connection::Connection(QObject *parent,
                        const quintptr& handler,
-                       std::atomic<unsigned long long>& sql_connections_counter) : QObject{parent},
-                                                                                  logged_in(false),
-                                                                                  socket(new QTcpSocket(this)),
-                                                                                  sql_connections_counter(sql_connections_counter) {
+                       std::atomic<unsigned long long>& sql_connections_counter,
+                       ThreadSafeList<Connection>& connections) : QObject{parent},
+                                                                  logged_in(false),
+                                                                  socket(new QTcpSocket(this)),
+                                                                  connections(connections),
+                                                                  sql_connections_counter(sql_connections_counter) {
 
     socket->setSocketDescriptor(handler);
-
     temporary_message = std::make_shared<Message>();
-
     connect(socket, &QTcpSocket::readyRead, this, &Connection::OnReadyRead);
 
 }
@@ -47,6 +47,7 @@ void Connection::OnReadyRead() {
 
     if (temporary_message->GetSize() == 0) {
 
+
         QByteArray size_byte_array = socket->readLine();
         size_byte_array.removeLast();
         size_t message_size = size_byte_array.toInt();
@@ -59,7 +60,11 @@ void Connection::OnReadyRead() {
 
             if (temporary_message->IsReady()) {
 
-                incoming_messages.push_front(temporary_message);
+                MessageResponder* message_responder = new MessageResponder(this, temporary_message->GetMessageByteArray(),
+                                                                           connections, sql_connections_counter);
+                QThreadPool::globalInstance()->start(message_responder);
+
+                ++sql_connections_counter;
                 temporary_message = std::make_shared<Message>();
 
             }
@@ -70,7 +75,11 @@ void Connection::OnReadyRead() {
 
         if (temporary_message->IsReady()) {
 
-            incoming_messages.push_front(temporary_message);
+            MessageResponder* message_responder = new MessageResponder(this, temporary_message->GetMessageByteArray(),
+                                                                       connections, sql_connections_counter);
+            QThreadPool::globalInstance()->start(message_responder);
+
+            ++sql_connections_counter;
             temporary_message = std::make_shared<Message>();
 
         } else {
@@ -81,7 +90,11 @@ void Connection::OnReadyRead() {
 
             if (temporary_message->IsReady()) {
 
-                incoming_messages.push_front(temporary_message);
+                MessageResponder* message_responder = new MessageResponder(this, temporary_message->GetMessageByteArray(),
+                                                                           connections, sql_connections_counter);
+                QThreadPool::globalInstance()->start(message_responder);
+
+                ++sql_connections_counter;
                 temporary_message = std::make_shared<Message>();
 
             }

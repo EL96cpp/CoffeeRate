@@ -53,21 +53,26 @@ void Client::onLogin(const QString &nickname, const QString &password) {
 
 void Client::onRegister(const QString &nickname, const QString &password) {
 
-    QDomDocument message;
+    QDomDocument message_document;
 
-    QDomElement register_document = message.createElement("Register");
-    message.appendChild(register_document);
+    QDomElement root = message_document.createElement("Message");
+    message_document.appendChild(root);
 
-    QDomElement node = message.createElement("Register_data");
-    node.setAttribute("Nickname", nickname);
-    node.setAttribute("Password", password);
+    QDomElement action = message_document.createElement("Action");
+    action.setAttribute("Action", "Register");
+    root.appendChild(action);
 
-    register_document.appendChild(node);
+    QDomElement login_data = message_document.createElement("Register_data");
+    login_data.setAttribute("Nickname", nickname);
+    login_data.setAttribute("Password", password);
+    root.appendChild(login_data);
 
-    QByteArray message_byte_array = message.toByteArray();
+    QByteArray message_byte_array = message_document.toByteArray();
 
     size_t message_size = message_byte_array.size();
     message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
+
+    qDebug() << message_byte_array;
 
     socket->write(message_byte_array);
 
@@ -90,6 +95,8 @@ void Client::onReadyRead() {
             if (temporary_message->IsReady()) {
 
                 incoming_messages.push_front(std::move(temporary_message));
+
+                temporary_message = std::make_shared<Message>();
 
             }
 
@@ -123,6 +130,8 @@ void Client::onReadyRead() {
 
                     incoming_messages.push_front(std::move(temporary_message));
 
+                    temporary_message = std::make_shared<Message>();
+
                 }
 
             }
@@ -132,6 +141,8 @@ void Client::onReadyRead() {
             if (temporary_message->IsReady()) {
 
                 incoming_messages.push_front(std::move(temporary_message));
+
+                temporary_message = std::make_shared<Message>();
 
             }
 

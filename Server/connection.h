@@ -7,12 +7,14 @@
 
 #include "threadsafelist.h"
 #include "message.h"
+#include "messageresponder.h"
 
 class Connection : public QObject {
 
     Q_OBJECT
 public:
-    Connection(QObject *parent, const quintptr& handler, std::atomic<unsigned long long>& sql_connections_counter);
+    Connection(QObject *parent, const quintptr& handler, std::atomic<unsigned long long>& sql_connections_counter,
+               ThreadSafeList<Connection>& connections);
 
     Connection(Connection& other) = delete;
 
@@ -35,7 +37,7 @@ private:
     QTcpSocket* socket;
     bool logged_in;
     std::atomic<unsigned long long>& sql_connections_counter;
-    ThreadSafeList<Message> incoming_messages;
+    ThreadSafeList<Connection>& connections;
     std::shared_ptr<Message> temporary_message;
 
 };

@@ -1,6 +1,8 @@
 #include "sqlservice.h"
 
-SqlService::SqlService(QObject *parent) : QObject{parent}, sql_database(QSqlDatabase::addDatabase("QPSQL")) {
+SqlService::SqlService(QObject *parent, const QString &sql_connestions_counter) :
+                      QObject(parent), sql_database(QSqlDatabase::addDatabase("QPSQL", sql_connestions_counter)) {
+
 
     sql_database.setHostName("127.0.0.1");
     sql_database.setPort(5432);
@@ -9,7 +11,6 @@ SqlService::SqlService(QObject *parent) : QObject{parent}, sql_database(QSqlData
     sql_database.setPassword("postgres");
     bool started = sql_database.open();
 
-    qDebug() << started;
 
 }
 
@@ -223,7 +224,7 @@ CheckResult SqlService::CheckIfCafeRegistered(const CafeData& cafe_data) {
 CheckResult SqlService::CheckIfNicknameExists(const QString &nickname) {
 
     QSqlQuery check_nickname_query(sql_database);
-    check_nickname_query.prepare("SELECT EXISTS (SELECT 1 FROM customers WHERE nickname = (?))");
+    check_nickname_query.prepare("SELECT EXISTS (SELECT 1 FROM users WHERE nickname = (?))");
     check_nickname_query.addBindValue(nickname);
 
     check_nickname_query.exec();

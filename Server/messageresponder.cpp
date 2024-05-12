@@ -7,7 +7,11 @@ MessageResponder::MessageResponder(QObject* parent,
                                    std::atomic<unsigned long long>& sql_connections_counter) : QObject(parent),
                                                                                                incoming_message(incoming_message),
                                                                                                connections(connections),
-                                                                                               sql_connections_counter(sql_connections_counter) {}
+                                                                                               sql_connections_counter(sql_connections_counter) {
+
+    sql_service = new SqlService(this, QString::number(sql_connections_counter));
+
+}
 
 void MessageResponder::run() {
 
@@ -50,6 +54,8 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
     if (login_result == LoginResult::SUCCESS) {
 
 
+        qDebug() << "Success";
+
         QDomElement action = message_document.createElement("Action");
         action.setAttribute("Action", "Login_accepted");
         root.appendChild(action);
@@ -61,6 +67,8 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
 
     } else if (login_result == LoginResult::INCORRECT_PASSWORD) {
 
+
+        qDebug() << "Incorrect password";
 
         QDomElement action = message_document.createElement("Action");
         action.setAttribute("Action", "Login_error");
@@ -74,6 +82,8 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
     } else if (login_result == LoginResult::NO_USER_IN_DATABASE) {
 
 
+        qDebug() << "No user in database";
+
         QDomElement action = message_document.createElement("Action");
         action.setAttribute("Action", "Login_error");
 
@@ -84,6 +94,8 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
 
     } else if (login_result == LoginResult::DATABASE_ERROR) {
 
+
+        qDebug() << "Database error";
 
         QDomElement action = message_document.createElement("Action");
         action.setAttribute("Action", "Login_error");

@@ -343,6 +343,10 @@ Page {
 
                 showEmptyFieldsError("Ошибка регистрации", "Заполните все\nнеобходимые поля!");
 
+            } else {
+
+                Client.onRegister(register_nickname_input.text, register_password_input.text);
+
             }
 
 

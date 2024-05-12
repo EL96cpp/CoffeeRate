@@ -57,7 +57,7 @@ class SqlService : public QObject {
 
     Q_OBJECT
 public:
-    SqlService(QObject *parent = nullptr);
+    SqlService(QObject *parent, const QString& sql_connestions_counter);
 
     SqlService(const SqlService& other) = delete;
     SqlService& operator = (const SqlService& other) = delete;
