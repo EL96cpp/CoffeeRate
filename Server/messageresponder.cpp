@@ -1,42 +1,20 @@
 #include "messageresponder.h"
 
 
-MessageResponder::MessageResponder(ThreadSafeList<Message> &incoming_messages,
+MessageResponder::MessageResponder(QObject* parent,
+                                   const QByteArray& incoming_message,
                                    ThreadSafeList<Connection> &connections,
-                                   std::atomic<unsigned long long>& sql_connections_counter) : incoming_messages(incoming_messages),
+                                   std::atomic<unsigned long long>& sql_connections_counter) : QObject(parent),
+                                                                                               incoming_message(incoming_message),
                                                                                                connections(connections),
                                                                                                sql_connections_counter(sql_connections_counter) {}
 
 void MessageResponder::run() {
 
-    qDebug() << "Start process messages";
-
-    while (true) {
-
-        incoming_messages.wait();
-
-        while (!incoming_messages.empty()) {
-
-            qDebug() << "incoming message processing!";
-
-            auto message = incoming_messages.pop_back();
-
-            RespondToMessage(message);
-
-        }
-
-    }
-
-}
-
-void MessageResponder::RespondToMessage(std::shared_ptr<Message> &message) {
-
-    qDebug() << "Respond to message started!";
-
-    QByteArray message_byte_array = message->GetMessageByteArray();
+    qDebug() << "Respond to message started!";;
 
     QDomDocument document;
-    document.setContent(message_byte_array);
+    document.setContent(incoming_message);
 
     QDomElement root = document.firstChildElement();
     QDomNodeList children_nodes = root.childNodes();
@@ -46,30 +24,18 @@ void MessageResponder::RespondToMessage(std::shared_ptr<Message> &message) {
     if (action == "Login") {
 
         QDomElement login_data = children_nodes.at(1).toElement();
-        QByteArray login_responce = Login(login_data.attribute("Nickname"), login_data.attribute("Password"));
-
-        qDebug() << "1";
-
-        message->GetSender()->SendMessage(login_responce);
-
-        qDebug() << "2";
+        Login(login_data.attribute("Nickname"), login_data.attribute("Password"));
 
     } else if (action == "Register") {
 
         QDomElement register_data = children_nodes.at(1).toElement();
-        QByteArray register_responce = Register(register_data.attribute("Nickname"), register_data.attribute("Password"));
-
-        message->GetSender()->SendMessage(register_responce);
+        Register(register_data.attribute("Nickname"), register_data.attribute("Password"));
 
     }
 
-    QDomElement login_data = children_nodes.at(1).toElement();
-
-    qDebug() << login_data.attribute("Nickname") << " " << login_data.attribute("Password");
-
 }
 
-QByteArray MessageResponder::Login(const QString &nickname, const QString &password) {
+void MessageResponder::Login(const QString &nickname, const QString &password) {
 
     qDebug() << "Login function start!";
 
@@ -134,11 +100,11 @@ QByteArray MessageResponder::Login(const QString &nickname, const QString &passw
     size_t message_size = message_byte_array.size();
     message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
 
-    return message_byte_array;
+    emit MessageResponceReady(message_byte_array);
 
 }
 
-QByteArray MessageResponder::Register(const QString &nickname, const QString &password) {
+void MessageResponder::Register(const QString &nickname, const QString &password) {
 
     RegisterResult register_result = sql_service->Register(nickname, password);
 
@@ -185,6 +151,6 @@ QByteArray MessageResponder::Register(const QString &nickname, const QString &pa
     size_t message_size = message_byte_array.size();
     message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
 
-    return message_byte_array;
+    emit MessageResponceReady(message_byte_array);
 
 }

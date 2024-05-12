@@ -12,7 +12,6 @@
 #include "connection.h"
 #include "threadsafelist.h"
 #include "message.h"
-#include "messageresponder.h"
 
 
 class Server : public QTcpServer {
@@ -33,7 +32,6 @@ private:
     std::thread message_processing_thread2;
     QThread message_processing_thread;
     ThreadSafeList<Connection> connections;
-    ThreadSafeList<Message> incoming_messages;
 
 };
 

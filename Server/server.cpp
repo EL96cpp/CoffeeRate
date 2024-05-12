@@ -19,7 +19,7 @@ void Server::StartListening(const quint16 &port) {
 void Server::incomingConnection(qintptr handle) {
 
     qDebug() << "Incoming connection";
-    std::shared_ptr<Connection> connection = std::make_shared<Connection>(this, handle, incoming_messages);
+    std::shared_ptr<Connection> connection = std::make_shared<Connection>(this, handle, sql_connections_counter);
     connections.push_front(std::move(connection));
 
 }

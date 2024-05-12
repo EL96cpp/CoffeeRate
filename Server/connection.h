@@ -12,7 +12,7 @@ class Connection : public QObject {
 
     Q_OBJECT
 public:
-    Connection(QObject *parent, const quintptr& handler, ThreadSafeList<Message>& incoming_messages);
+    Connection(QObject *parent, const quintptr& handler, std::atomic<unsigned long long>& sql_connections_counter);
 
     Connection(Connection& other) = delete;
 
@@ -20,11 +20,11 @@ public:
 
     QString GetNickname();
     bool IsLoggedIn();
-    void SendMessage(Message& message);
-    void SendMessage(const QByteArray& message);
 
 signals:
 
+public slots:
+    void SendMessage(const QByteArray& message_byte_array);
 
 private slots:
     void OnReadyRead();
@@ -34,7 +34,8 @@ private:
     QString nickname;
     QTcpSocket* socket;
     bool logged_in;
-    ThreadSafeList<Message>& incoming_messages;
+    std::atomic<unsigned long long>& sql_connections_counter;
+    ThreadSafeList<Message> incoming_messages;
     std::shared_ptr<Message> temporary_message;
 
 };

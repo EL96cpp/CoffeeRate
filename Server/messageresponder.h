@@ -11,22 +11,26 @@
 #include "message.h"
 #include "sqlservice.h"
 
-class MessageResponder : public QRunnable {
+class MessageResponder : public QObject, public QRunnable {
+
+    Q_OBJECT
 
 public:
-    MessageResponder(ThreadSafeList<Message>& incoming_messages, ThreadSafeList<Connection>& connections,
+    MessageResponder(QObject* parent, const QByteArray& incoming_message, ThreadSafeList<Connection>& connections,
                      std::atomic<unsigned long long>& sql_connections_counter);
 
     void run() override;
 
+signals:
+    void MessageResponceReady(const QByteArray& message_byte_array);
+
 private:
-    void RespondToMessage(std::shared_ptr<Message>& message);
-    QByteArray Login(const QString& nickname, const QString& password);
-    QByteArray Register(const QString& nickname, const QString& password);
+    void Login(const QString& nickname, const QString& password);
+    void Register(const QString& nickname, const QString& password);
 
 private:
     std::atomic<unsigned long long>& sql_connections_counter;
-    ThreadSafeList<Message>& incoming_messages;
+    QByteArray incoming_message;
     ThreadSafeList<Connection>& connections;
     SqlService* sql_service;
 

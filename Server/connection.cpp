@@ -1,14 +1,15 @@
 #include "connection.h"
 
-Connection::Connection(QObject *parent, const quintptr& handler,
-                       ThreadSafeList<Message>& incoming_messages) : QObject{parent},
-                                                                     logged_in(false),
-                                                                     socket(new QTcpSocket(this)),
-                                                                     incoming_messages(incoming_messages) {
+Connection::Connection(QObject *parent,
+                       const quintptr& handler,
+                       std::atomic<unsigned long long>& sql_connections_counter) : QObject{parent},
+                                                                                  logged_in(false),
+                                                                                  socket(new QTcpSocket(this)),
+                                                                                  sql_connections_counter(sql_connections_counter) {
 
     socket->setSocketDescriptor(handler);
 
-    temporary_message = std::make_shared<Message>(this);
+    temporary_message = std::make_shared<Message>();
 
     connect(socket, &QTcpSocket::readyRead, this, &Connection::OnReadyRead);
 
@@ -32,20 +33,11 @@ bool Connection::IsLoggedIn() {
 
 }
 
-void Connection::SendMessage(Message &message) {
+void Connection::SendMessage(const QByteArray &message_byte_array) {
 
     qDebug() << "Send message call!";
 
-    QByteArray byte_array = message.GetMessageByteArray();
-    byte_array.prepend(QString::number(message.GetSize()).toUtf8() + "\n");
-
-}
-
-void Connection::SendMessage(const QByteArray &message) {
-
-    qDebug() << "Send message call!";
-
-    socket->write(message);
+    socket->write(message_byte_array);
 
     qDebug() << "Send message call ended!";
 
@@ -63,12 +55,12 @@ void Connection::OnReadyRead() {
 
             QByteArray message_byte_array = socket->read(socket->bytesAvailable());
 
-            temporary_message = std::make_shared<Message>(message_size, message_byte_array, this);
+            temporary_message = std::make_shared<Message>(message_size, message_byte_array);
 
             if (temporary_message->IsReady()) {
 
                 incoming_messages.push_front(temporary_message);
-                temporary_message = std::make_shared<Message>(this);
+                temporary_message = std::make_shared<Message>();
 
             }
 
@@ -79,7 +71,7 @@ void Connection::OnReadyRead() {
         if (temporary_message->IsReady()) {
 
             incoming_messages.push_front(temporary_message);
-            temporary_message = std::make_shared<Message>(this);
+            temporary_message = std::make_shared<Message>();
 
         } else {
 
@@ -90,7 +82,7 @@ void Connection::OnReadyRead() {
             if (temporary_message->IsReady()) {
 
                 incoming_messages.push_front(temporary_message);
-                temporary_message = std::make_shared<Message>(this);
+                temporary_message = std::make_shared<Message>();
 
             }
 
