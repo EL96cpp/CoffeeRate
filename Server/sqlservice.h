@@ -65,14 +65,15 @@ public:
     LoginResult Login(const QString& nickname, const QString& password);
     RegisterResult Register(const QString& nickname, const QString& password);
     AddCafeResult AddNewCafe(const CafeData& cafe_data);
-    AddCafeReviewResult AddCafeReview(const CafeData& cafe_data, const QString& nickname, const QString& star_rating, const QString& review_text);
+    AddCafeReviewResult AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname, const QString& star_rating, const QString& review_text);
 
 signals:
 
 
 private:
-    CheckResult CheckIfCafeRegistered(const CafeData& cafe_data);
     CheckResult CheckIfNicknameExists(const QString& nickname);
+    CheckResult CheckCafeIdIsCorrect(const CafeData& cafe_data, const int& cafe_id);
+    CheckResult CheckIfCafeRegistered(const CafeData& cafe_data);
     bool CheckIfStarRatingCorrect(const QString& star_rating);
 
 private:

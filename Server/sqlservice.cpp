@@ -135,10 +135,10 @@ AddCafeResult SqlService::AddNewCafe(const CafeData& cafe_data) {
 
 }
 
-AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const QString& nickname, const QString &star_rating, const QString &review_text) {
+AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname, const QString &star_rating, const QString &review_text) {
 
     CheckResult check_nickname_result = CheckIfNicknameExists(nickname);
-    CheckResult check_cafe_result = CheckIfCafeRegistered(cafe_data);
+    CheckResult check_cafe_result = CheckCafeIdIsCorrect(cafe_data, cafe_id);
 
     if (check_nickname_result == CheckResult::FALSE) {
 
@@ -232,6 +232,44 @@ CheckResult SqlService::CheckIfNicknameExists(const QString &nickname) {
     if (check_nickname_query.next()) {
 
         if (check_nickname_query.value(0).toBool()) {
+
+            return CheckResult::TRUE;
+
+        } else {
+
+            return CheckResult::FALSE;
+
+        }
+
+    } else {
+
+        return CheckResult::DATABASE_ERROR;
+
+    }
+
+}
+
+CheckResult SqlService::CheckCafeIdIsCorrect(const CafeData &cafe_data, const int &cafe_id) {
+
+    QSqlQuery check_cafe_query(sql_database);
+    check_cafe_query.prepare("SELECT name_of_cafe, city, street, house_number, latitude, longitude"
+                             " FROM cafes WHERE id = (?)");
+    check_cafe_query.addBindValue(cafe_id);
+
+    check_cafe_query.exec();
+
+    if (check_cafe_query.next()) {
+
+        QString name_of_cafe = check_cafe_query.value(0).toString();
+        QString city = check_cafe_query.value(1).toString();
+        QString street = check_cafe_query.value(2).toString();
+        QString house_number = check_cafe_query.value(3).toString();
+        QString latitude = check_cafe_query.value(4).toString();
+        QString longitude = check_cafe_query.value(5).toString();
+
+        CafeData actual_data(name_of_cafe, city, street, house_number, latitude, longitude);
+
+        if (actual_data == cafe_data) {
 
             return CheckResult::TRUE;
 
