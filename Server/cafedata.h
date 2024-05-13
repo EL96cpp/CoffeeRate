@@ -16,12 +16,14 @@ public:
 
     bool operator == (const CafeData& other);
 
+    int GetId() const;
     QString GetName() const;
     QString GetCity() const;
     QString GetStreet() const;
     QString GetHouseNumber() const;
     QString GetLatitude() const;
     QString GetLongitude() const;
+    QString GetAverageRating() const;
 
 private:
     int cafe_id;

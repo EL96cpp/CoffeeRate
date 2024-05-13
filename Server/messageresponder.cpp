@@ -117,6 +117,8 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
 
     emit MessageResponceReady(message_byte_array);
 
+    SendAllCafeObjects();
+
 }
 
 void MessageResponder::Register(const QString &nickname, const QString &password) {
@@ -168,6 +170,48 @@ void MessageResponder::Register(const QString &nickname, const QString &password
 
     qDebug() << "Will send message signal!";
     qDebug() << message_byte_array;
+
+    emit MessageResponceReady(message_byte_array);
+
+}
+
+void MessageResponder::SendAllCafeObjects() {
+
+    QVector<CafeData> cafe_data = sql_service->GetAllCafeData();
+
+    QDomDocument message_document;
+
+    QDomElement root = message_document.createElement("Message");
+    message_document.appendChild(root);
+
+    QDomElement action = message_document.createElement("Action");
+    action.setAttribute("Action", "Set cafe objects");
+    root.appendChild(action);
+
+    QDomElement cafe_objects = message_document.createElement("Cafe data");
+    root.appendChild(cafe_objects);
+
+    for (auto& data : cafe_data) {
+
+        QDomElement data_element = message_document.createElement("Cafe data");
+
+        data_element.setAttribute("Id", data.GetId());
+        data_element.setAttribute("Name", data.GetName());
+        data_element.setAttribute("City", data.GetCity());
+        data_element.setAttribute("Street", data.GetStreet());
+        data_element.setAttribute("House number", data.GetHouseNumber());
+        data_element.setAttribute("Average rating", data.GetAverageRating());
+
+        cafe_objects.appendChild(data_element);
+
+    }
+
+    QByteArray message_byte_array = message_document.toByteArray();
+
+    size_t message_size = message_byte_array.size();
+    message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
+
+    qDebug() << "Send message responce ready for cafe objects data!";
 
     emit MessageResponceReady(message_byte_array);
 

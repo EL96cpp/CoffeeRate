@@ -11,8 +11,6 @@ SqlService::SqlService(QObject *parent, const QString &sql_connestions_counter) 
     sql_database.setPassword("postgres");
     bool started = sql_database.open();
 
-    GetAllCafeData();
-
 }
 
 LoginResult SqlService::Login(const QString &nickname, const QString &password) {
@@ -210,8 +208,6 @@ QVector<CafeData> SqlService::GetAllCafeData() {
         QString average_rating = get_data_query.value(7).toString();
 
         average_rating = average_rating.left(3);
-
-        qDebug() << cafe_id << " " << cafe_name << " " << city << " " << street << " " << average_rating;
 
         cafe_data.emplace_back(cafe_id, cafe_name, city, street, house_number, latitude, longitude, average_rating);
 

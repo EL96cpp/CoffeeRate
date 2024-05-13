@@ -27,6 +27,7 @@ signals:
 private:
     void Login(const QString& nickname, const QString& password);
     void Register(const QString& nickname, const QString& password);
+    void SendAllCafeObjects();
 
 private:
     std::atomic<unsigned long long>& sql_connections_counter;

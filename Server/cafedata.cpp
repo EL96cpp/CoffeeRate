@@ -29,6 +29,12 @@ bool CafeData::operator ==(const CafeData &other) {
 
 }
 
+int CafeData::GetId() const {
+
+    return cafe_id;
+
+}
+
 QString CafeData::GetName() const {
 
     return name;
@@ -62,5 +68,11 @@ QString CafeData::GetLatitude() const {
 QString CafeData::GetLongitude() const {
 
     return longitude;
+
+}
+
+QString CafeData::GetAverageRating() const {
+
+    return average_rating;
 
 }

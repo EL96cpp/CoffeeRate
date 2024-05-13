@@ -37,6 +37,8 @@ void Connection::SendMessage(const QByteArray &message_byte_array) {
 
     qDebug() << "Send message call!";
 
+    qDebug() << message_byte_array;
+
     socket->write(message_byte_array);
 
     qDebug() << "Send message call ended!";
