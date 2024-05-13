@@ -141,6 +141,24 @@ Page {
 
     }
 
+    /*
+    StarRating {
+
+        id: star_rating
+
+        non_hover_color: light_sand
+        hover_color: dark_brown
+        background_rect_color: "#50ffffff"
+
+        star_width: 50
+        star_margin: 5
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+
+    }
+    */
+
     Connections {
 
         target: login_button

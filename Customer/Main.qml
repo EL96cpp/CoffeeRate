@@ -28,7 +28,7 @@ Window {
 
     Image {
 
-        id: bk
+        id: background_image
 
         source: "qrc:/Images/background.jpg"
 
@@ -94,6 +94,51 @@ Window {
         id: info_message
     }
 
+
+    Canvas {
+
+        id: star
+
+        property int bounding_rect_side: 100
+        property string non_hovered_color: "red"
+        property string hovered_color: "green"
+        property bool hovered: true
+
+        anchors.centerIn: parent
+
+        width: bounding_rect_side
+        height: bounding_rect_side
+
+        onPaint: {
+
+            var ctx = getContext("2d")
+
+            ctx.strokeStyle = hovered ? hovered_color : non_hovered_color;
+            ctx.fillStyle = hovered ? hovered_color : non_hovered_color;
+            ctx.lineWidth = 1;
+
+            ctx.beginPath();
+
+            ctx.moveTo(0, width/2);
+
+            ctx.rotate(Math.PI/5);
+            ctx.stroke();
+            ctx.rotate(Math.PI/5);
+            ctx.stroke();
+            ctx.rotate(Math.PI/5);
+            ctx.stroke();
+            ctx.rotate(Math.PI/5);
+            ctx.stroke();
+
+            //ctx.lineTo();
+
+
+            ctx.fill()
+
+        }
+
+
+    }
 
 }
 
