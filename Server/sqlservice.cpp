@@ -11,6 +11,7 @@ SqlService::SqlService(QObject *parent, const QString &sql_connestions_counter) 
     sql_database.setPassword("postgres");
     bool started = sql_database.open();
 
+    GetAllCafeData();
 
 }
 
@@ -184,6 +185,39 @@ AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const i
         }
 
     }
+
+}
+
+QVector<CafeData> SqlService::GetAllCafeData() {
+
+    QSqlQuery get_data_query(sql_database);
+    get_data_query.prepare("SELECT id, name_of_cafe, city, street, house_number, latitude, longitude, "
+                           "(SELECT AVG(star_rating) FROM reviews WHERE cafe_id = id) FROM cafes");
+
+    get_data_query.exec();
+
+    QVector<CafeData> cafe_data;
+
+    while (get_data_query.next()) {
+
+        int cafe_id = get_data_query.value(0).toInt();
+        QString cafe_name = get_data_query.value(1).toString();
+        QString city = get_data_query.value(2).toString();
+        QString street = get_data_query.value(3).toString();
+        QString house_number = get_data_query.value(4).toString();
+        QString latitude = get_data_query.value(5).toString();
+        QString longitude = get_data_query.value(6).toString();
+        QString average_rating = get_data_query.value(7).toString();
+
+        average_rating = average_rating.left(3);
+
+        qDebug() << cafe_id << " " << cafe_name << " " << city << " " << street << " " << average_rating;
+
+        cafe_data.emplace_back(cafe_id, cafe_name, city, street, house_number, latitude, longitude, average_rating);
+
+    }
+
+    return cafe_data;
 
 }
 

@@ -6,6 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>
+#include <QVector>
 
 #include "cafedata.h"
 
@@ -66,6 +67,8 @@ public:
     RegisterResult Register(const QString& nickname, const QString& password);
     AddCafeResult AddNewCafe(const CafeData& cafe_data);
     AddCafeReviewResult AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname, const QString& star_rating, const QString& review_text);
+
+    QVector<CafeData> GetAllCafeData();
 
 signals:
 

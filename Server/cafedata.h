@@ -7,7 +7,7 @@ class CafeData
 {
 public:
     CafeData(const int& cafe_id, const QString& name, const QString& city, const QString& street,
-             const QString& house_number, const QString& latitude, const QString& longitude);
+             const QString& house_number, const QString& latitude, const QString& longitude, const QString& average_rating);
 
     CafeData(const QString& name, const QString& city, const QString& street,
              const QString& house_number, const QString& latitude, const QString& longitude);
@@ -31,6 +31,7 @@ private:
     QString house_number;
     QString latitude;
     QString longitude;
+    QString average_rating;
 
 };
 
