@@ -141,6 +141,12 @@ Page {
 
     }
 
+    Star {
+        id: star
+        star_width: 55
+        star_color: orange
+    }
+
     /*
     StarRating {
 
