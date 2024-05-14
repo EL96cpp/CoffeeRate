@@ -6,8 +6,8 @@ CafeReview::CafeReview(const QString &reviewer_nickname,
                        const QString &star_rating,
                        const QString &review_text,
                        const QString &review_date) : reviewer_nickname(reviewer_nickname), cafe_id(cafe_id),
-    star_rating(star_rating), review_text(review_text),
-    review_date(review_date) {}
+                                                     star_rating(star_rating), review_text(review_text),
+                                                     review_date(review_date) {}
 
 QString CafeReview::GetReviewerNickname() const {
 

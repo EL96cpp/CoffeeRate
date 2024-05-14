@@ -17,7 +17,7 @@ qt_add_qml_module(appCustomer
     URI Customer
     VERSION 1.0
     QML_FILES Main.qml CustomButton.qml CloseButton.qml ReturnButton.qml MainPage.qml LoginPage.qml RegisterPage.qml
-              InfoMessage.qml StarRating.qml Star.qml
+              InfoMessage.qml StarRating.qml Star.qml MapPage.qml
     RESOURCES Images.qrc Fonts.qrc
     SOURCES client.h client.cpp message.h message.cpp threadsafelist.h
 )

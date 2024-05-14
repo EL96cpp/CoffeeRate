@@ -90,6 +90,10 @@ Window {
         id: register_page
     }
 
+    MapPage {
+        id: map_page
+    }
+
     InfoMessage {
         id: info_message
     }

@@ -132,4 +132,19 @@ Item {
 
     }
 
+    Connections {
+
+        target: Client
+
+        function onShowMessage(title, message) {
+
+            info_message.info_message_title = title;
+            info_message.info_message_text = message;
+
+            info_message.visible = true;
+
+        }
+
+    }
+
 }

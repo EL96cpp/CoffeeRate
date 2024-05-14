@@ -23,19 +23,19 @@ void MessageResponder::run() {
     QDomElement root = document.firstChildElement();
     QDomNodeList children_nodes = root.childNodes();
 
-    QString action = children_nodes.at(0).toElement().attribute("Action");
+    QString theme = children_nodes.at(0).toElement().attribute("Theme");
 
-    if (action == "Login") {
+    if (theme == "Login") {
 
         QDomElement login_data = children_nodes.at(1).toElement();
         Login(login_data.attribute("Nickname"), login_data.attribute("Password"));
 
-    } else if (action == "Register") {
+    } else if (theme == "Register") {
 
         QDomElement register_data = children_nodes.at(1).toElement();
         Register(register_data.attribute("Nickname"), register_data.attribute("Password"));
 
-    } else if (action == "Get reviews") {
+    } else if (theme == "Get_reviews") {
 
         QDomElement cafe_id_element = children_nodes.at(1).toElement();
         SendCafeReviews(cafe_id_element.attribute("Cafe_id").toUtf8().toInt());
@@ -58,9 +58,13 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
 
         qDebug() << "Success";
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Login_accepted");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Login");
+        root.appendChild(theme);
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Login_accepted");
+        root.appendChild(result);
 
         QDomElement nickname_element = message_document.createElement("Nickname");
         nickname_element.setAttribute("Nickname", nickname);
@@ -72,9 +76,13 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
 
         qDebug() << "Incorrect password";
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Login_error");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Login");
+        root.appendChild(theme);
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Login_error");
+        root.appendChild(result);
 
         QDomElement error_description = message_document.createElement("Error_description");
         error_description.setAttribute("Error_description", "Incorrect password");
@@ -86,8 +94,13 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
 
         qDebug() << "No user in database";
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Login_error");
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Login");
+        root.appendChild(theme);
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Login_error");
+        root.appendChild(result);
 
         QDomElement error_description = message_document.createElement("Error_description");
         error_description.setAttribute("Error_description", "Unregistered nickname");
@@ -99,9 +112,13 @@ void MessageResponder::Login(const QString &nickname, const QString &password) {
 
         qDebug() << "Database error";
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Login_error");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Login");
+        root.appendChild(theme);
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Login_error");
+        root.appendChild(result);
 
         QDomElement error_description = message_document.createElement("Error_description");
         error_description.setAttribute("Error_description", "Database error");
@@ -139,17 +156,25 @@ void MessageResponder::Register(const QString &nickname, const QString &password
     if (register_result == RegisterResult::SUCCESS) {
 
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Register_accepted");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Register");
+        root.appendChild(theme);
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Register_accepted");
+        root.appendChild(result);
 
 
     } else if (register_result == RegisterResult::NICKNAME_IS_ALREADY_IN_USE) {
 
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Register_error");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Register");
+        root.appendChild(theme);
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Register_error");
+        root.appendChild(result);
 
         QDomElement error_description = message_document.createElement("Error_description");
         error_description.setAttribute("Error_description", "Nikcname is already registered");
@@ -159,9 +184,13 @@ void MessageResponder::Register(const QString &nickname, const QString &password
     } else if (register_result == RegisterResult::DATABASE_ERROR) {
 
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Register_error");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Register");
+        root.appendChild(theme);
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Register_error");
+        root.appendChild(result);
 
         QDomElement error_description = message_document.createElement("Error_description");
         error_description.setAttribute("Error_description", "Database error");
@@ -193,16 +222,20 @@ void MessageResponder::SendCafeReviews(const int &cafe_id) {
 
     if (result.first == GetCafeReviewsResult::SUCCESS) {
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Set cafe reviews");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Cafe_reviews");
+        root.appendChild(theme);
 
-        QDomElement review_objects = message_document.createElement("Cafe reviews");
+        QDomElement result_element = message_document.createElement("Result");
+        result_element.setAttribute("Result", "Accepted");
+        root.appendChild(result_element);
+
+        QDomElement review_objects = message_document.createElement("Cafe_reviews");
         root.appendChild(review_objects);
 
         for (auto& cafe_review : result.second) {
 
-            QDomElement review_data = message_document.createElement("Review data");
+            QDomElement review_data = message_document.createElement("Review_data");
 
             review_data.setAttribute("Reviewer", cafe_review.GetReviewerNickname());
             review_data.setAttribute("Cafe_id", cafe_review.GetCafeId());
@@ -216,9 +249,13 @@ void MessageResponder::SendCafeReviews(const int &cafe_id) {
 
     } else if (result.first == GetCafeReviewsResult::NO_CAFE_IN_DATABASE) {
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Cafe reviews error");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Cafe_reviews");
+        root.appendChild(theme);
+
+        QDomElement result_element = message_document.createElement("Result");
+        result_element.setAttribute("Result", "Error");
+        root.appendChild(result_element);
 
         QDomElement error_description = message_document.createElement("Error_description");
         error_description.setAttribute("Error_description", "Unkonw cafe id");
@@ -226,9 +263,13 @@ void MessageResponder::SendCafeReviews(const int &cafe_id) {
 
     } else if (result.first == GetCafeReviewsResult::DATABASE_ERROR) {
 
-        QDomElement action = message_document.createElement("Action");
-        action.setAttribute("Action", "Cafe reviews error");
-        root.appendChild(action);
+        QDomElement theme = message_document.createElement("Theme");
+        theme.setAttribute("Theme", "Cafe_reviews");
+        root.appendChild(theme);
+
+        QDomElement result_element = message_document.createElement("Result");
+        result_element.setAttribute("Result", "Error");
+        root.appendChild(result_element);
 
         QDomElement error_description = message_document.createElement("Error_description");
         error_description.setAttribute("Error_description", "Database error");
@@ -254,34 +295,41 @@ void MessageResponder::SendAllCafeObjects() {
     QDomElement root = message_document.createElement("Message");
     message_document.appendChild(root);
 
-    QDomElement action = message_document.createElement("Action");
-    action.setAttribute("Action", "Set cafe objects");
-    root.appendChild(action);
+    QDomElement theme = message_document.createElement("Theme");
+    theme.setAttribute("Theme", "Cafe_objects");
+    root.appendChild(theme);
 
-    QDomElement cafe_objects = message_document.createElement("Cafe data");
+    QDomElement result = message_document.createElement("Result");
+    result.setAttribute("Result", "Success");
+    root.appendChild(result);
+
+    QDomElement cafe_objects = message_document.createElement("Cafe_data_list");
     root.appendChild(cafe_objects);
 
-    for (auto& data : cafe_data) {
+    for (int i = 0; i < cafe_data.size(); ++i) {
 
-        QDomElement data_element = message_document.createElement("Cafe data");
+        QDomElement data_element = message_document.createElement("Cafe_data");
 
-        data_element.setAttribute("Id", data.GetId());
-        data_element.setAttribute("Name", data.GetName());
-        data_element.setAttribute("City", data.GetCity());
-        data_element.setAttribute("Street", data.GetStreet());
-        data_element.setAttribute("House number", data.GetHouseNumber());
-        data_element.setAttribute("Average rating", data.GetAverageRating());
+        data_element.setAttribute("Id", cafe_data[i].GetId());
+        data_element.setAttribute("Name", cafe_data[i].GetName());
+        data_element.setAttribute("City", cafe_data[i].GetCity());
+        data_element.setAttribute("Street", cafe_data[i].GetStreet());
+        data_element.setAttribute("House_number", cafe_data[i].GetHouseNumber());
+        data_element.setAttribute("Average_rating", cafe_data[i].GetAverageRating());
 
         cafe_objects.appendChild(data_element);
 
     }
+
 
     QByteArray message_byte_array = message_document.toByteArray();
 
     size_t message_size = message_byte_array.size();
     message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
 
+
     qDebug() << "Send message responce ready for cafe objects data!";
+
 
     emit MessageResponceIsReady(message_byte_array);
 
