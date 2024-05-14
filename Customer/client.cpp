@@ -25,6 +25,9 @@ void Client::ConnectToServer(const QString &address, const quint16 &port) {
 
         qDebug() << "Connected!";
 
+        //Debug!!
+        onGetCafeReviews(1);
+
     }
 
 }
@@ -71,6 +74,32 @@ void Client::onRegister(const QString &nickname, const QString &password) {
     login_data.setAttribute("Nickname", nickname);
     login_data.setAttribute("Password", password);
     root.appendChild(login_data);
+
+    QByteArray message_byte_array = message_document.toByteArray();
+
+    size_t message_size = message_byte_array.size();
+    message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
+
+    qDebug() << message_byte_array;
+
+    socket->write(message_byte_array);
+
+}
+
+void Client::onGetCafeReviews(const int &cafe_id) {
+
+    QDomDocument message_document;
+
+    QDomElement root = message_document.createElement("Message");
+    message_document.appendChild(root);
+
+    QDomElement action = message_document.createElement("Action");
+    action.setAttribute("Action", "Get reviews");
+    root.appendChild(action);
+
+    QDomElement cafe_id_element = message_document.createElement("Cafe_id");
+    cafe_id_element.setAttribute("Cafe_id", QString::number(cafe_id));
+    root.appendChild(cafe_id_element);
 
     QByteArray message_byte_array = message_document.toByteArray();
 

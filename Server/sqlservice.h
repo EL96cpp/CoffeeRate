@@ -7,8 +7,11 @@
 #include <QSqlRecord>
 #include <QSqlError>
 #include <QVector>
+#include <QPair>
 
 #include "cafedata.h"
+#include "cafereview.h"
+
 
 enum class LoginResult {
 
@@ -45,6 +48,14 @@ enum class AddCafeReviewResult {
 
 };
 
+enum class GetCafeReviewsResult {
+
+    SUCCESS,
+    NO_CAFE_IN_DATABASE,
+    DATABASE_ERROR
+
+};
+
 enum class CheckResult {
 
     TRUE,
@@ -69,6 +80,7 @@ public:
     AddCafeReviewResult AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname, const QString& star_rating, const QString& review_text);
 
     QVector<CafeData> GetAllCafeData();
+    QPair<GetCafeReviewsResult, QVector<CafeReview>>GetCafeReviews(const int& cafe_id);
 
 signals:
 
@@ -76,6 +88,7 @@ signals:
 private:
     CheckResult CheckIfNicknameExists(const QString& nickname);
     CheckResult CheckCafeIdIsCorrect(const CafeData& cafe_data, const int& cafe_id);
+    CheckResult CheckIfCafeExists(const int& cafe_id);
     CheckResult CheckIfCafeRegistered(const CafeData& cafe_data);
     bool CheckIfStarRatingCorrect(const QString& star_rating);
 

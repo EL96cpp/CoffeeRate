@@ -22,11 +22,12 @@ public:
     void run() override;
 
 signals:
-    void MessageResponceReady(const QByteArray& message_byte_array);
+    void MessageResponceIsReady(const QByteArray& message_byte_array);
 
 private:
     void Login(const QString& nickname, const QString& password);
     void Register(const QString& nickname, const QString& password);
+    void SendCafeReviews(const int& cafe_id);
     void SendAllCafeObjects();
 
 private:

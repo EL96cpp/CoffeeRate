@@ -24,6 +24,7 @@ signals:
 public slots:
     void onLogin(const QString& nickname, const QString& password);
     void onRegister(const QString& nickname, const QString& password);
+    void onGetCafeReviews(const int& cafe_id);
     void onReadyRead();
 
 private:

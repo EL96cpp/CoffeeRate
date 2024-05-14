@@ -21,7 +21,7 @@ CafeData::CafeData(const QString &name, const QString &city,
                    const QString &street, const QString &house_number) : cafe_id(0), average_rating(""), name(name),
                                                                          city(city), street(street), house_number(house_number) {}
 
-bool CafeData::operator ==(const CafeData &other) {
+bool CafeData::operator == (const CafeData &other) {
 
     return (average_rating == other.average_rating && cafe_id == other.cafe_id && name == other.name &&
             city == other.city && street == other.street && house_number == other.house_number &&

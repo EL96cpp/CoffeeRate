@@ -21,6 +21,7 @@ add_executable(Server
   connection.h connection.cpp
   threadsafelist.h
   messageresponder.h messageresponder.cpp
+  cafereview.h cafereview.cpp
 )
 target_link_libraries(Server Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network
                       Qt${QT_VERSION_MAJOR}::Xml Qt${QT_VERSION_MAJOR}::Sql)

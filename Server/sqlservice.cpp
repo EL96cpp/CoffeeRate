@@ -9,7 +9,7 @@ SqlService::SqlService(QObject *parent, const QString &sql_connestions_counter) 
     sql_database.setDatabaseName("coffee_rate");
     sql_database.setUserName("postgres");
     sql_database.setPassword("postgres");
-    bool started = sql_database.open();
+    sql_database.open();
 
 }
 
@@ -217,6 +217,54 @@ QVector<CafeData> SqlService::GetAllCafeData() {
 
 }
 
+QPair<GetCafeReviewsResult, QVector<CafeReview>> SqlService::GetCafeReviews(const int &cafe_id) {
+
+    CheckResult check_cafe_exists = CheckIfCafeExists(cafe_id);
+
+    QVector<CafeReview> cafe_reviews;
+
+    if (check_cafe_exists == CheckResult::TRUE) {
+
+        QSqlQuery get_reviews_query(sql_database);
+        get_reviews_query.prepare("SELECT reviewer, cafe_id, star_rating, review_text, review_date "
+                                  "FROM reviews WHERE cafe_id = (?)");
+        get_reviews_query.addBindValue(cafe_id);
+
+        if (get_reviews_query.exec()) {
+
+            while (get_reviews_query.next()) {
+
+                QString reviewer_nickname = get_reviews_query.value(0).toString();
+                QString cafe_id = get_reviews_query.value(1).toString();
+                QString star_rating = get_reviews_query.value(2).toString();
+                QString review_text = get_reviews_query.value(3).toString();
+                QString review_date = get_reviews_query.value(4).toString();
+
+                cafe_reviews.emplace_back(reviewer_nickname, cafe_id, star_rating, review_text, review_date);
+
+            }
+
+            return qMakePair(GetCafeReviewsResult::SUCCESS, cafe_reviews);
+
+        } else {
+
+            return qMakePair(GetCafeReviewsResult::DATABASE_ERROR, cafe_reviews);
+
+        }
+
+
+    } else if (check_cafe_exists == CheckResult::FALSE) {
+
+        return qMakePair(GetCafeReviewsResult::NO_CAFE_IN_DATABASE, cafe_reviews);
+
+    } else if (check_cafe_exists == CheckResult::DATABASE_ERROR) {
+
+        return qMakePair(GetCafeReviewsResult::DATABASE_ERROR, cafe_reviews);
+
+    }
+
+}
+
 CheckResult SqlService::CheckIfCafeRegistered(const CafeData& cafe_data) {
 
     QSqlQuery check_cafe_query(sql_database);
@@ -306,6 +354,40 @@ CheckResult SqlService::CheckCafeIdIsCorrect(const CafeData &cafe_data, const in
         } else {
 
             return CheckResult::FALSE;
+
+        }
+
+    } else {
+
+        return CheckResult::DATABASE_ERROR;
+
+    }
+
+}
+
+CheckResult SqlService::CheckIfCafeExists(const int &cafe_id) {
+
+    QSqlQuery check_cafe_query(sql_database);
+    check_cafe_query.prepare("SELECT EXISTS (SELECT 1 FROM cafes WHERE id = (?))");
+    check_cafe_query.addBindValue(cafe_id);
+
+    if (check_cafe_query.exec()) {
+
+        if (check_cafe_query.next()) {
+
+            if (check_cafe_query.value(0).toBool() == true) {
+
+                return CheckResult::TRUE;
+
+            } else {
+
+                return CheckResult::FALSE;
+
+            }
+
+        } else {
+
+            return CheckResult::DATABASE_ERROR;
 
         }
 
