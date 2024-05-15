@@ -354,4 +354,16 @@ Page {
 
     }
 
+    Connections {
+
+        target: Client
+
+        function onRegistered() {
+
+            stack_view.pop(main_page);
+
+        }
+
+    }
+
 }

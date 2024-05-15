@@ -94,6 +94,10 @@ Window {
         id: map_page
     }
 
+    ReviewsPage {
+        id: reviews_page
+    }
+
     InfoMessage {
         id: info_message
     }

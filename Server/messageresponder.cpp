@@ -227,7 +227,7 @@ void MessageResponder::SendCafeReviews(const int &cafe_id) {
         root.appendChild(theme);
 
         QDomElement result_element = message_document.createElement("Result");
-        result_element.setAttribute("Result", "Accepted");
+        result_element.setAttribute("Result", "Success");
         root.appendChild(result_element);
 
         QDomElement review_objects = message_document.createElement("Cafe_reviews");

@@ -20,9 +20,12 @@ public:
 
 signals:
     void loggedIn();
+    void registered();
     void showMessage(const QString& error_title, const QString& error_description);
     void addCafeObject(const int& cafe_id, const QString& name, const QString& city, const QString& street,
                        const int& house_number, const double& latitude, const double& longitude, const float& average_rating);
+    void addCafeReview(const QString& reviewer, const int& cafe_id, const int& star_rating,
+                       const QString& review_text, const QString& review_date);
 
 public slots:
     void onLogin(const QString& nickname, const QString& password);

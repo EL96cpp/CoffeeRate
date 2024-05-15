@@ -285,5 +285,17 @@ Page {
 
     }
 
+    Connections {
+
+        target: Client
+
+        function onLoggedIn() {
+
+            stack_view.push(map_page);
+
+        }
+
+    }
+
 
 }

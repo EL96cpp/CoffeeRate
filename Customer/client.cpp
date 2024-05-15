@@ -223,6 +223,7 @@ void Client::RespondToMessage(const QByteArray &message_byte_array) {
         if (result == "Register_accepted") {
 
             emit showMessage("Регистрация", "Регистрация прошла успешно!");
+            emit registered();
 
         } else if (result == "Register_error") {
 
@@ -239,25 +240,59 @@ void Client::RespondToMessage(const QByteArray &message_byte_array) {
 
         if (result == "Success") {
 
-            QDomNode element = children_nodes.at(2);
-            QDomNodeList list = element.childNodes();
+            QDomNodeList cafe_list = children_nodes.at(2).childNodes();
 
-            for (int i = 0; i < list.count(); ++i) {
+            for (int i = 0; i < cafe_list.count(); ++i) {
 
-                qDebug() << list.at(i).toElement().attribute("Id") << " " << list.at(i).toElement().attribute("Name");
+                int cafe_id = cafe_list.at(i).toElement().attribute("Id").toInt();
+                QString name = cafe_list.at(i).toElement().attribute("Name");
+                QString city = cafe_list.at(i).toElement().attribute("City");
+                QString street = cafe_list.at(i).toElement().attribute("Street");
+                int house_number = cafe_list.at(i).toElement().attribute("House_number").toInt();
+                double latitude = cafe_list.at(i).toElement().attribute("Latitude").toDouble();
+                double longitude = cafe_list.at(i).toElement().attribute("Longitude").toDouble();
+                float average_rating = cafe_list.at(i).toElement().attribute("Average_rating").toFloat();
+
+                emit addCafeObject(cafe_id, name, city, street, house_number, latitude, longitude, average_rating);
+
             }
 
+        } else if (result == "Error") {
 
-        } else if (result == "Cafe_objects_error") {
+            QString error_description = children_nodes.at(2).toElement().attribute("Error_description");
 
-
+            emit showMessage("Cafe objects error", error_description);
 
         }
 
     } else if (theme == "Cafe_reviews") {
 
         QString result = children_nodes.at(1).toElement().attribute("Result");
-        qDebug() << result;
+
+        if (result == "Success") {
+
+            QDomNodeList reviews_list = children_nodes.at(2).childNodes();
+
+            for (int i = 0; i < reviews_list.count(); ++i) {
+
+                QString reviewer = reviews_list.at(i).toElement().attribute("Reviewer");
+                int cafe_id = reviews_list.at(i).toElement().attribute("Cafe_id").toInt();
+                int star_rating = reviews_list.at(i).toElement().attribute("Star_rating").toInt();
+                QString review_text = reviews_list.at(i).toElement().attribute("Review_text");
+                QString review_date = reviews_list.at(i).toElement().attribute("Review_date");
+
+                emit addCafeReview(reviewer, cafe_id, star_rating, review_text, review_date);
+
+            }
+
+        } else if (result == "Error") {
+
+            QString error_description = children_nodes.at(2).toElement().attribute("Error_description");
+
+            emit showMessage("Cafe reviews error", error_description);
+
+        }
+
 
     }
 
