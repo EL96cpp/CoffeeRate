@@ -18,6 +18,7 @@ Window {
     property string light_sand: "#c8b69f"
     property string orange: "#a55e47"
     property string pale: "#efede6"
+    property string yellow: "#ffdf7e"
 
     FontLoader {
 
@@ -101,7 +102,6 @@ Window {
     InfoMessage {
         id: info_message
     }
-
 
 }
 

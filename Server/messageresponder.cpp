@@ -315,6 +315,8 @@ void MessageResponder::SendAllCafeObjects() {
         data_element.setAttribute("City", cafe_data[i].GetCity());
         data_element.setAttribute("Street", cafe_data[i].GetStreet());
         data_element.setAttribute("House_number", cafe_data[i].GetHouseNumber());
+        data_element.setAttribute("Latitude", cafe_data[i].GetLatitude());
+        data_element.setAttribute("Longitude", cafe_data[i].GetLongitude());
         data_element.setAttribute("Average_rating", cafe_data[i].GetAverageRating());
 
         cafe_objects.appendChild(data_element);

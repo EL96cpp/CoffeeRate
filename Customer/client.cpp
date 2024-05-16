@@ -248,9 +248,12 @@ void Client::RespondToMessage(const QByteArray &message_byte_array) {
                 QString name = cafe_list.at(i).toElement().attribute("Name");
                 QString city = cafe_list.at(i).toElement().attribute("City");
                 QString street = cafe_list.at(i).toElement().attribute("Street");
-                int house_number = cafe_list.at(i).toElement().attribute("House_number").toInt();
+                QString house_number = cafe_list.at(i).toElement().attribute("House_number");
                 double latitude = cafe_list.at(i).toElement().attribute("Latitude").toDouble();
                 double longitude = cafe_list.at(i).toElement().attribute("Longitude").toDouble();
+
+                qDebug() << latitude << " " << longitude;
+
                 float average_rating = cafe_list.at(i).toElement().attribute("Average_rating").toFloat();
 
                 emit addCafeObject(cafe_id, name, city, street, house_number, latitude, longitude, average_rating);
@@ -270,6 +273,8 @@ void Client::RespondToMessage(const QByteArray &message_byte_array) {
         QString result = children_nodes.at(1).toElement().attribute("Result");
 
         if (result == "Success") {
+
+            emit getCafeReviewsSuccess();
 
             QDomNodeList reviews_list = children_nodes.at(2).childNodes();
 
@@ -292,7 +297,6 @@ void Client::RespondToMessage(const QByteArray &message_byte_array) {
             emit showMessage("Cafe reviews error", error_description);
 
         }
-
 
     }
 
