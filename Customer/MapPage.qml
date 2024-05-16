@@ -100,7 +100,6 @@ Page {
                     id: image
 
                     source: "qrc:/Images/cafe_mark.png"
-                    z: 1
 
                     Rectangle {
 
@@ -110,8 +109,6 @@ Page {
                                 cafe_rating.paintedHeight
                         radius: 5
                         color: cafe_mark_background_color
-
-                        z: 10
 
                         anchors.left: parent.horizontalCenter
                         anchors.top: parent.bottom
@@ -185,6 +182,20 @@ Page {
 
                             Client.onGetCafeReviews(model.cafe_id);
 
+                            for (var i = 0; i < cafe_objects_model.count; ++i) {
+
+                                if (cafe_objects_model.get(i).cafe_id === model.cafe_id) {
+
+                                    console.log("found values for " + model.cafe_id);
+
+                                    reviews_page.cafe_name = model.name;
+                                    reviews_page.cafe_address = model.street + ", " + model.house_number;
+                                    reviews_page.cafe_rating = model.average_rating;
+
+                                }
+
+                            }
+
                         }
 
                     }
@@ -193,15 +204,6 @@ Page {
 
             }
 
-
-        }
-
-        Address {
-
-            id: address_example
-            city: "Moscow"
-            country: "Russia"
-            street: "New Arbat Avenue"
 
         }
 
