@@ -12,7 +12,7 @@ Page {
 
     property string cafe_name
     property string cafe_address
-    property int cafe_rating
+    property string cafe_rating
     property int cafe_data_margins: 10
 
     Image {
@@ -33,10 +33,9 @@ Page {
 
     Rectangle {
 
-        id: map_rectangle
+        id: reviews_rectangle
         width: main_window.width*0.95
         height: main_window.height*0.9
-        radius: 10
         color: pale
 
         clip: true
@@ -46,20 +45,36 @@ Page {
         Rectangle {
 
             id: cafe_data_rectangle
-            width: parent.width*0.95
+            width: parent.width
             height: cafe_name_text.paintedHeight + cafe_address_text.paintedHeight + cafe_rating_text.paintedHeight +
                     cafe_name_text.anchors.topMargin * 3
-            radius: 10
-            color: "red"
+            color: dark_brown
 
             anchors.top: parent.top
-            //anchors.topMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
+
+            ReturnButton {
+
+                id: reviews_return_button
+
+                circle_radius: cafe_rating_text.paintedHeight*1.5
+                circle_color: light_sand
+                circle_color_hovered: orange
+                line_width: 1
+                lines_color: light_brown
+                lines_color_hovered: pale
+
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.margins: circle_radius/2
+
+            }
 
             Text {
 
                 id: cafe_name_text
                 text: cafe_name
+                color: yellow
                 font.pointSize: 20
                 font.bold: true
                 font.underline: true
@@ -74,6 +89,7 @@ Page {
 
                 id: cafe_address_text
                 text: cafe_address
+                color: yellow
                 font.pointSize: 14
 
                 anchors.top: cafe_name_text.bottom
@@ -86,6 +102,7 @@ Page {
 
                 id: cafe_rating_text
                 text: cafe_rating
+                color: yellow
                 font.pointSize: 14
 
                 anchors.verticalCenter: cafe_rating_star.verticalCenter
@@ -97,13 +114,85 @@ Page {
             Star {
 
                 id: cafe_rating_star
+                star_color: yellow
                 star_width: cafe_rating_text.paintedHeight
 
                 anchors.right: parent.right
-                anchors.top: cafe_address_text.bottom
+                anchors.bottom: parent.bottom
                 anchors.margins: cafe_data_margins
 
             }
+
+        }
+
+        ListView {
+
+            id: reviews_view
+            width: parent.width
+            height: parent.height*0.7
+            clip: true
+            spacing: 5
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: cafe_data_rectangle.bottom
+
+            model: reviews_model
+
+            delegate: Rectangle {
+
+                id: review_rectangle
+                width: parent.width
+                height: nickname.paintedHeight + review_text.paintedHeight + review_date_text.paintedHeight +
+                        nickname.anchors.margins*4
+                radius: 10
+                border.width: 1
+                border.color: dark_brown
+
+                color: orange
+
+                Text {
+
+                    id: nickname
+                    text: model.reviewer
+                    font.pointSize: 18
+                    font.bold: true
+                    font.underline: true
+                    color: pale
+
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.margins: 5
+
+                }
+
+                Text {
+
+                    id: review_text
+                    text: model.review_text
+                    font.pointSize: 14
+                    color: pale
+
+                    anchors.top: nickname.bottom
+                    anchors.topMargin: 5
+                    anchors.left: nickname.left
+
+                }
+
+                Text {
+
+                    id: review_date_text
+                    text: model.review_date
+                    font.pointSize: 14
+                    color: pale
+
+                    anchors.top: review_text.bottom
+                    anchors.right: parent.right
+                    anchors.margins: 5
+
+                }
+
+            }
+
 
         }
 
@@ -118,7 +207,18 @@ Page {
             reviews_model.append({ reviewer: reviewer, cafe_id: cafe_id, star_rating: star_rating,
                                    review_text: review_text, review_date: review_date });
 
-            console.log(reviewer + " " + cafe_id + " " + star_rating + " " + review_text + " " + review_date);
+        }
+
+    }
+
+    Connections {
+
+        target: reviews_return_button
+
+        function onReturnButtonClickedSignal() {
+
+            stack_view.pop(map_page);
+            reviews_model.clear();
 
         }
 

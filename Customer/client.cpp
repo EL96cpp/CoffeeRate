@@ -286,6 +286,8 @@ void Client::RespondToMessage(const QByteArray &message_byte_array) {
                 QString review_text = reviews_list.at(i).toElement().attribute("Review_text");
                 QString review_date = reviews_list.at(i).toElement().attribute("Review_date");
 
+                review_date = review_date.left(10);
+
                 emit addCafeReview(reviewer, cafe_id, star_rating, review_text, review_date);
 
             }
