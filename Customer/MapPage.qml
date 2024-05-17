@@ -29,8 +29,9 @@ Page {
         width: main_window.width*0.95
         height: main_window.height*0.9
         radius: 10
-        color: pale
-
+        color: light_brown
+        border.width: 1
+        border.color: pale
         anchors.centerIn: parent
 
         Plugin {

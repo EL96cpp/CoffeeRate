@@ -22,6 +22,13 @@ Rectangle {
     property int rating: 0
     property bool fixed: false
 
+    function reset() {
+
+        fixed = false;
+        rating = 0;
+
+    }
+
     Canvas {
 
         id: non_hovered_star1

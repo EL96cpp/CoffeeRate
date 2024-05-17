@@ -15,6 +15,8 @@ Page {
     property string cafe_rating
     property int cafe_data_margins: 10
 
+    signal showEmptyFieldsError(var message_title, var message_text);
+
     Image {
 
         id: background_image
@@ -58,10 +60,10 @@ Page {
                 id: reviews_return_button
 
                 circle_radius: cafe_rating_text.paintedHeight*1.5
-                circle_color: light_sand
+                circle_color: yellow
                 circle_color_hovered: orange
                 line_width: 1
-                lines_color: light_brown
+                lines_color: "black"
                 lines_color_hovered: pale
 
                 anchors.top: parent.top
@@ -129,7 +131,7 @@ Page {
 
             id: reviews_view
             width: parent.width
-            height: parent.height*0.7
+            height: parent.height*0.6
             clip: true
             spacing: 5
 
@@ -148,7 +150,7 @@ Page {
                 border.width: 1
                 border.color: dark_brown
 
-                color: orange
+                color: light_sand
 
                 Text {
 
@@ -157,7 +159,7 @@ Page {
                     font.pointSize: 18
                     font.bold: true
                     font.underline: true
-                    color: pale
+                    color: light_brown
 
                     anchors.left: parent.left
                     anchors.top: parent.top
@@ -170,7 +172,7 @@ Page {
                     id: review_text
                     text: model.review_text
                     font.pointSize: 14
-                    color: pale
+                    color: light_brown
 
                     anchors.top: nickname.bottom
                     anchors.topMargin: 5
@@ -183,13 +185,108 @@ Page {
                     id: review_date_text
                     text: model.review_date
                     font.pointSize: 14
-                    color: pale
+                    color: light_brown
 
                     anchors.top: review_text.bottom
                     anchors.right: parent.right
                     anchors.margins: 5
 
                 }
+
+            }
+
+        }
+
+        Rectangle {
+
+            id: make_review_rectangle
+
+            width: parent.width
+            height: parent.height - cafe_data_rectangle.height - reviews_view.height
+            color: dark_brown
+            border.color: yellow
+            border.width: 1
+
+            anchors.top: reviews_view.bottom
+            anchors.horizontalCenter: reviews_view.horizontalCenter
+
+            Rectangle {
+
+                id: review_edit_rectangle
+                width: parent.width*0.9
+                height: parent.height*0.5
+                radius: 10
+                color: light_sand
+                border.width: 1
+                border.color: dark_brown
+                clip: true
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: (cafe_data_rectangle.width - review_edit_rectangle.width)/2
+
+                TextEdit {
+
+                    id: review_text_edit
+                    width: parent.width*0.95
+                    height: parent.height
+                    font.pointSize: 14
+                    wrapMode: Text.WrapAnywhere
+
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.topMargin: 5
+
+                }
+
+            }
+
+            StarRating {
+
+                id: review_star_rating
+                background_rect_color: "#00000000"
+                non_hover_color: pale
+                hover_color: yellow
+
+                star_width: cafe_rating_star.width
+                star_margin: star_width/2
+
+                anchors.left: review_edit_rectangle.left
+                anchors.top: review_edit_rectangle.bottom
+                anchors.topMargin: 5
+
+            }
+
+            Text {
+
+                id: review_stars_text
+                text: review_star_rating.rating
+                font.pointSize: 14
+                color: yellow
+
+                anchors.verticalCenter: review_star_rating.verticalCenter
+                anchors.left: review_star_rating.right
+                anchors.leftMargin: 5
+
+            }
+
+            CustomButton {
+
+                id: send_review_button
+                button_width: 200
+                button_height: 40
+                border_width: 1
+                button_radius: button_height/2
+                button_text: "Отправить"
+                text_color: light_sand
+                text_color_hovered: "white"
+                font_point_size: 14
+                rect_color: light_brown
+                rect_color_hovered: orange
+
+                anchors.right: review_edit_rectangle.right
+                anchors.top: review_edit_rectangle.bottom
+                anchors.topMargin: review_edit_rectangle.anchors.topMargin
 
             }
 
@@ -219,6 +316,32 @@ Page {
 
             stack_view.pop(map_page);
             reviews_model.clear();
+            review_star_rating.reset();
+            review_text_edit.clear();
+
+        }
+
+    }
+
+    Connections {
+
+        target: send_review_button
+
+        function onButtonClickedSignal() {
+
+            if (review_text_edit.text === "") {
+
+                showEmptyFieldsError("Ошибка", "Заполните все необходимые поля!");
+
+            } else if (!review_star_rating.fixed) {
+
+                showEmptyFieldsError("Ошибка", "Чтобы оставить отзыв, поставьте оценку заведению!");
+
+            } else {
+
+
+
+            }
 
         }
 
