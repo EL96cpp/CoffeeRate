@@ -134,7 +134,8 @@ AddCafeResult SqlService::AddNewCafe(const CafeData& cafe_data) {
 
 }
 
-AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname, const QString &star_rating, const QString &review_text) {
+AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname,
+                                              const QString &star_rating, const QString &review_text, const QString& review_date) {
 
     CheckResult check_nickname_result = CheckIfNicknameExists(nickname);
     CheckResult check_cafe_result = CheckCafeIdIsCorrect(cafe_data, cafe_id);
@@ -162,15 +163,13 @@ AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const i
     } else {
 
         QSqlQuery add_review_query(sql_database);
-        add_review_query.prepare("INSERT INTO reviews (reviewer, name_of_cafe, city, street, house_number, star_rating, review_text) "
-                                 "VALUES ((?), (?), (?), (?), (?), (?), ())");
+        add_review_query.prepare("INSERT INTO reviews (reviewer, cafe_id, star_rating, review_text, review_date) "
+                                 "VALUES ((?), (?), (?), (?), (?))");
         add_review_query.addBindValue(nickname);
-        add_review_query.addBindValue(cafe_data.GetName());
-        add_review_query.addBindValue(cafe_data.GetCity());
-        add_review_query.addBindValue(cafe_data.GetStreet());
-        add_review_query.addBindValue(cafe_data.GetHouseNumber());
+        add_review_query.addBindValue(cafe_id);
         add_review_query.addBindValue(star_rating);
         add_review_query.addBindValue(review_text);
+        add_review_query.addBindValue(review_date);
 
         if (add_review_query.exec()) {
 
@@ -345,7 +344,10 @@ CheckResult SqlService::CheckCafeIdIsCorrect(const CafeData &cafe_data, const in
         QString latitude = check_cafe_query.value(4).toString();
         QString longitude = check_cafe_query.value(5).toString();
 
+        qDebug() << "Sql database geo-data " << latitude << " " << longitude;
+
         CafeData actual_data(name_of_cafe, city, street, house_number, latitude, longitude);
+
 
         if (actual_data == cafe_data) {
 
@@ -401,6 +403,6 @@ CheckResult SqlService::CheckIfCafeExists(const int &cafe_id) {
 
 bool SqlService::CheckIfStarRatingCorrect(const QString &star_rating) {
 
-    return (star_rating.toInt() >= 1 && star_rating.toInt() <= 5);
+    return (star_rating.toInt() >= 0 && star_rating.toInt() <= 5);
 
 }

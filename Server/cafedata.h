@@ -2,6 +2,7 @@
 #define CAFEDATA_H
 
 #include <QString>
+#include <QDebug>
 
 class CafeData
 {

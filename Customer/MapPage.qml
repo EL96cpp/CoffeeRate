@@ -183,19 +183,16 @@ Page {
 
                             Client.onGetCafeReviews(model.cafe_id);
 
-                            for (var i = 0; i < cafe_objects_model.count; ++i) {
+                            reviews_page.cafe_id = model.cafe_id;
+                            reviews_page.cafe_name = model.name;
+                            reviews_page.cafe_address = model.street + ", " + model.house_number;
+                            reviews_page.cafe_rating = model.average_rating;
 
-                                if (cafe_objects_model.get(i).cafe_id === model.cafe_id) {
-
-                                    console.log("found values for " + model.cafe_id);
-
-                                    reviews_page.cafe_name = model.name;
-                                    reviews_page.cafe_address = model.street + ", " + model.house_number;
-                                    reviews_page.cafe_rating = model.average_rating;
-
-                                }
-
-                            }
+                            reviews_page.city = model.city;
+                            reviews_page.street = model.street;
+                            reviews_page.house_number = model.house_number;
+                            reviews_page.latitude = model.latitude;
+                            reviews_page.longitude = model.longitude;
 
                         }
 

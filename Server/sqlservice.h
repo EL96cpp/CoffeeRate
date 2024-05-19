@@ -77,7 +77,8 @@ public:
     LoginResult Login(const QString& nickname, const QString& password);
     RegisterResult Register(const QString& nickname, const QString& password);
     AddCafeResult AddNewCafe(const CafeData& cafe_data);
-    AddCafeReviewResult AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname, const QString& star_rating, const QString& review_text);
+    AddCafeReviewResult AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname,
+                                      const QString& star_rating, const QString& review_text, const QString& review_date);
 
     QVector<CafeData> GetAllCafeData();
     QPair<GetCafeReviewsResult, QVector<CafeReview>>GetCafeReviews(const int& cafe_id);

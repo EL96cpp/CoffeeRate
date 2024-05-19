@@ -45,6 +45,7 @@ void Connection::SendMessage(const QByteArray &message_byte_array) {
 
 }
 
+
 void Connection::OnReadyRead() {
 
     if (temporary_message->GetSize() == 0) {

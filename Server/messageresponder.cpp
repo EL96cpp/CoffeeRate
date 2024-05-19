@@ -40,6 +40,32 @@ void MessageResponder::run() {
         QDomElement cafe_id_element = children_nodes.at(1).toElement();
         SendCafeReviews(cafe_id_element.attribute("Cafe_id").toUtf8().toInt());
 
+    } else if (theme == "Add_review") {
+
+        QDomElement cafe_data_element = children_nodes.at(1).toElement();
+
+        int cafe_id = cafe_data_element.attribute("Id").toUtf8().toInt();
+        QString cafe_name = cafe_data_element.attribute("Name");
+        QString city = cafe_data_element.attribute("City");
+        QString street = cafe_data_element.attribute("Street");
+        QString house_number = cafe_data_element.attribute("House_number");
+        QString latitude = cafe_data_element.attribute("Latitude");
+        QString longitude = cafe_data_element.attribute("Longitude");
+
+        qDebug() << "Got geo-data for review " << latitude << " " << longitude;
+
+        CafeData cafe_data(cafe_name, city, street, house_number, latitude, longitude);
+
+
+        QDomElement review_data = children_nodes.at(2).toElement();
+
+        QString nickname = review_data.attribute("Nickname");
+        QString star_rating = review_data.attribute("Star_rating");
+        QString review_text = review_data.attribute("Review_text");
+        QString review_date = review_data.attribute("Review_date");
+
+        AddCafeReview(cafe_data , cafe_id, nickname, star_rating, review_text, review_date);
+
     }
 
 }
@@ -336,3 +362,85 @@ void MessageResponder::SendAllCafeObjects() {
     emit MessageResponceIsReady(message_byte_array);
 
 }
+
+void MessageResponder::AddCafeReview(const CafeData &cafe_data, const int &cafe_id, const QString &nickname,
+                                     const QString &star_rating, const QString &review_text, const QString& review_date) {
+
+    qDebug() << "Add cafe review function";
+
+    AddCafeReviewResult result = sql_service->AddCafeReview(cafe_data, cafe_id, nickname, star_rating,
+                                                            review_text, review_date);
+
+    QDomDocument message_document;
+    QDomElement root = message_document.createElement("Message");
+    message_document.appendChild(root);
+
+    QDomElement theme = message_document.createElement("Theme");
+    theme.setAttribute("Theme", "Add_review");
+    root.appendChild(theme);
+
+
+    if (result == AddCafeReviewResult::SUCCESS) {
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Success");
+        root.appendChild(result);
+
+        QDomElement review_data = message_document.createElement("Review_data");
+        review_data.setAttribute("Cafe_id", cafe_id);
+        review_data.setAttribute("Nickname", nickname);
+        review_data.setAttribute("Star_rating", star_rating);
+        review_data.setAttribute("Review_text", review_text);
+        review_data.setAttribute("Review_date", review_date);
+        root.appendChild(review_data);
+
+    } else if (result == AddCafeReviewResult::NO_USER_IN_DATABASE) {
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Error");
+        root.appendChild(result);
+
+        QDomElement error_description = message_document.createElement("Error_description");
+        error_description.setAttribute("Error_description", "No user in database");
+        root.appendChild(error_description);
+
+    } else if (result == AddCafeReviewResult::NO_CAFE_IN_DATABASE) {
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Error");
+        root.appendChild(result);
+
+        QDomElement error_description = message_document.createElement("Error_description");
+        error_description.setAttribute("Error_description", "No cafe in database");
+        root.appendChild(error_description);
+
+    } else if (result == AddCafeReviewResult::INCORRECT_STAR_RATING) {
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Error");
+        root.appendChild(result);
+
+        QDomElement error_description = message_document.createElement("Error_description");
+        error_description.setAttribute("Error_description", "Incorrect rating value");
+        root.appendChild(error_description);
+
+    } else if (result == AddCafeReviewResult::DATABASE_ERROR) {
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Error");
+        root.appendChild(result);
+
+        QDomElement error_description = message_document.createElement("Error_description");
+        error_description.setAttribute("Error_description", "Database error");
+        root.appendChild(error_description);
+
+    }
+
+    QByteArray message_byte_array = message_document.toByteArray();
+    size_t message_size = message_byte_array.size();
+    message_byte_array.prepend(QString::number(message_size).toUtf8() + "\n");
+
+    emit MessageResponceIsReady(message_byte_array);
+
+}
+

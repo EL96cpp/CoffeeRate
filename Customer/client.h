@@ -21,9 +21,10 @@ public:
 signals:
     void loggedIn();
     void registered();
+    void cafeReviewAdded();
     void showMessage(const QString& error_title, const QString& error_description);
     void addCafeObject(const int& cafe_id, const QString& name, const QString& city, const QString& street,
-                       const QString& house_number, const double& latitude, const double& longitude, const float& average_rating);
+                       const QString& house_number, const QString& latitude, const QString& longitude, const float& average_rating);
     void addCafeReview(const QString& reviewer, const int& cafe_id, const int& star_rating,
                        const QString& review_text, const QString& review_date);
     void getCafeReviewsSuccess();
@@ -31,6 +32,8 @@ signals:
 public slots:
     void onLogin(const QString& nickname, const QString& password);
     void onRegister(const QString& nickname, const QString& password);
+    void onSendReview(const int& cafe_id, const QString& cafe_name, const QString& city, const QString& street, const QString& house_number,
+                      const QString& latitude, const QString& longitude, const int& star_rating, const QString& review_text);
     void onGetCafeReviews(const int& cafe_id);
     void onReadyRead();
 

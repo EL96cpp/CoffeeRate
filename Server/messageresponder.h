@@ -23,12 +23,15 @@ public:
 
 signals:
     void MessageResponceIsReady(const QByteArray& message_byte_array);
+    void MessageToAllClients(const QByteArray& message_byte_array);
 
 private:
     void Login(const QString& nickname, const QString& password);
     void Register(const QString& nickname, const QString& password);
     void SendCafeReviews(const int& cafe_id);
     void SendAllCafeObjects();
+    void AddCafeReview(const CafeData& cafe_data, const int& cafe_id, const QString& nickname,
+                       const QString& star_rating, const QString& review_text, const QString& review_date);
 
 private:
     std::atomic<unsigned long long>& sql_connections_counter;

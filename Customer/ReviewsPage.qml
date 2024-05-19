@@ -10,7 +10,13 @@ Page {
 
     visible: false
 
+    property string cafe_id
     property string cafe_name
+    property string city
+    property string street
+    property string house_number
+    property string latitude
+    property string longitude
     property string cafe_address
     property string cafe_rating
     property int cafe_data_margins: 10
@@ -310,6 +316,19 @@ Page {
 
     Connections {
 
+        target: Client
+
+        function onCafeReviewAdded() {
+
+            review_text_edit.clear();
+            review_star_rating.reset();
+
+        }
+
+    }
+
+    Connections {
+
         target: reviews_return_button
 
         function onReturnButtonClickedSignal() {
@@ -339,7 +358,10 @@ Page {
 
             } else {
 
+                console.log(latitude + " " + longitude);
 
+                Client.onSendReview(cafe_id, cafe_name, city, street, house_number, latitude, longitude,
+                                    review_stars_text.text, review_text_edit.text);
 
             }
 
