@@ -8,6 +8,7 @@
 #include <QSqlError>
 #include <QVector>
 #include <QPair>
+#include <QDate>
 
 #include "cafedata.h"
 #include "cafereview.h"
@@ -44,6 +45,7 @@ enum class AddCafeReviewResult {
     NO_CAFE_IN_DATABASE,
     NO_USER_IN_DATABASE,
     INCORRECT_STAR_RATING,
+    THIRTY_DAYS_HAVE_NOT_PASSED,
     DATABASE_ERROR
 
 };
@@ -91,6 +93,7 @@ private:
     CheckResult CheckCafeIdIsCorrect(const CafeData& cafe_data, const int& cafe_id);
     CheckResult CheckIfCafeExists(const int& cafe_id);
     CheckResult CheckIfCafeRegistered(const CafeData& cafe_data);
+    CheckResult CheckIfReviewAllowed(const QString& nickname, const int& cafe_id, const QString& review_date);
     bool CheckIfStarRatingCorrect(const QString& star_rating);
 
 private:

@@ -139,6 +139,7 @@ AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const i
 
     CheckResult check_nickname_result = CheckIfNicknameExists(nickname);
     CheckResult check_cafe_result = CheckCafeIdIsCorrect(cafe_data, cafe_id);
+    CheckResult check_time_limit = CheckIfReviewAllowed(nickname, cafe_id, review_date);
 
     if (check_nickname_result == CheckResult::FALSE) {
 
@@ -159,6 +160,14 @@ AddCafeReviewResult SqlService::AddCafeReview(const CafeData& cafe_data, const i
     } else if (!CheckIfStarRatingCorrect(star_rating)) {
 
         return AddCafeReviewResult::INCORRECT_STAR_RATING;
+
+    } else if (check_time_limit == CheckResult::FALSE) {
+
+        return AddCafeReviewResult::THIRTY_DAYS_HAVE_NOT_PASSED;
+
+    } else if (check_time_limit == CheckResult::DATABASE_ERROR) {
+
+        return AddCafeReviewResult::DATABASE_ERROR;
 
     } else {
 
@@ -295,6 +304,78 @@ CheckResult SqlService::CheckIfCafeRegistered(const CafeData& cafe_data) {
         return CheckResult::DATABASE_ERROR;
 
     }
+
+}
+
+CheckResult SqlService::CheckIfReviewAllowed(const QString &nickname, const int &cafe_id, const QString &review_date) {
+
+    QSqlQuery check_review_exists_query(sql_database);
+    check_review_exists_query.prepare("SELECT EXISTS (SELECT 1 FROM reviews WHERE reviewer = (?) AND cafe_id = (?))");
+    check_review_exists_query.addBindValue(nickname);
+    check_review_exists_query.addBindValue(cafe_id);
+
+    bool review_exists;
+
+    if (check_review_exists_query.exec()) {
+
+        if (check_review_exists_query.next()) {
+
+            review_exists = check_review_exists_query.value(0).toBool();
+
+            if (!review_exists) {
+
+                return CheckResult::TRUE;
+
+            }
+
+        } else {
+
+            return CheckResult::DATABASE_ERROR;
+
+        }
+
+    } else {
+
+        return CheckResult::DATABASE_ERROR;
+
+    }
+
+    if (review_exists) {
+
+        QSqlQuery check_date_query(sql_database);
+        check_date_query.prepare("SELECT review_date FROM reviews WHERE reviewer = (?) AND cafe_id = (?)"
+                                 " ORDER BY review_date DESC LIMIT 1");
+        check_date_query.addBindValue(nickname);
+        check_date_query.addBindValue(cafe_id);
+
+        if (check_date_query.exec()) {
+
+            QDate last_review_date = check_date_query.value(0).toDate();
+
+            QDate current_review_date = QDate::fromString(review_date);
+
+            if (last_review_date.daysTo(current_review_date) < 30) {
+
+                return CheckResult::FALSE;
+
+            } else {
+
+                return CheckResult::TRUE;
+
+            }
+
+        } else {
+
+            return CheckResult::DATABASE_ERROR;
+
+        }
+
+    } else {
+
+        return CheckResult::TRUE;
+
+    }
+
 
 }
 

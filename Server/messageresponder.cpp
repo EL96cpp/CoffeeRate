@@ -424,6 +424,16 @@ void MessageResponder::AddCafeReview(const CafeData &cafe_data, const int &cafe_
         error_description.setAttribute("Error_description", "Incorrect rating value");
         root.appendChild(error_description);
 
+    } else if (result == AddCafeReviewResult::THIRTY_DAYS_HAVE_NOT_PASSED) {
+
+        QDomElement result = message_document.createElement("Result");
+        result.setAttribute("Result", "Error");
+        root.appendChild(result);
+
+        QDomElement error_description = message_document.createElement("Error_description");
+        error_description.setAttribute("Error_description", "You can rate cafe once every 30 days");
+        root.appendChild(error_description);
+
     } else if (result == AddCafeReviewResult::DATABASE_ERROR) {
 
         QDomElement result = message_document.createElement("Result");
