@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import QtLocation
 import QtPositioning
 
+
 Page {
 
     id: map_page
@@ -41,17 +42,124 @@ Page {
 
         }
 
+        Row {
+
+            id: map_header_row
+            width: parent.width*0.9
+            height: parent.height*0.1
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: parent.height*0.1/2
+
+            Rectangle {
+
+                id: reviews_navigation_rectangle
+                width: parent.width/3
+                height: parent.height
+                color: reviews_navigation_mouse_area.containsMouse ? orange : dark_brown
+
+                Text {
+
+                    id: reviews_navigation_text
+
+                    text: "Отзывы"
+                    font.pointSize: 15
+                    color: reviews_navigation_mouse_area.containsMouse ? pale : yellow
+
+                    anchors.centerIn: parent
+
+                }
+
+                MouseArea {
+
+                    id: reviews_navigation_mouse_area
+
+                    hoverEnabled: true
+                    anchors.fill: parent
+
+                }
+
+            }
+
+            Rectangle {
+
+                id: route_navigation_rectangle
+                width: parent.width/3
+                height: parent.height
+
+                color: route_navigation_mouse_area.containsMouse ? orange : dark_brown
+
+                Text {
+
+                    id: route_navigation_text
+
+                    text: "Проложить\nмаршрут"
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 15
+                    color: route_navigation_mouse_area.containsMouse ? pale : yellow
+
+                    anchors.centerIn: parent
+
+                }
+
+                MouseArea {
+
+                    id: route_navigation_mouse_area
+
+                    hoverEnabled: true
+                    anchors.fill: parent
+
+                }
+
+            }
+
+            Rectangle {
+
+                id: add_cafe_navigation_rectangle
+                width: parent.width/3
+                height: parent.height
+
+                color: add_cafe_navigation_mouse_area.containsMouse ? orange : dark_brown
+
+                Text {
+
+                    id: add_cafe_navigation_text
+                    text: "Добавить\nкафе"
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 15
+                    color: add_cafe_navigation_mouse_area.containsMouse ? pale : yellow
+
+                    anchors.centerIn: parent
+
+                }
+
+                MouseArea {
+
+                    id: add_cafe_navigation_mouse_area
+
+                    hoverEnabled: true
+                    anchors.fill: parent
+
+                }
+
+            }
+
+        }
+
         Map {
 
             id: map
             width: parent.width*0.9
-            height: parent.height*0.9
-            anchors.centerIn: parent
+            height: parent.height*0.8
             plugin: mapPlugin
             center: QtPositioning.coordinate(55.755, 37.617)
             zoomLevel: 15
             minimumZoomLevel: 11
             maximumZoomLevel: 20
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: map_header_row.bottom
 
             property geoCoordinate startCentroid
 
