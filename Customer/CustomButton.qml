@@ -79,6 +79,7 @@ Item {
             text: button_text
             color: button_mouse_area.containsMouse ? text_color_hovered : text_color
             font.pointSize: font_point_size
+            horizontalAlignment: Text.AlignHCenter
             anchors.centerIn: parent
 
         }

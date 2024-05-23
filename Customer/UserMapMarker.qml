@@ -9,14 +9,11 @@ MapQuickItem {
 
     id: user_map_marker 
 
+    anchorPoint.x: user_marker_image.width/2
+    anchorPoint.y: user_marker_image.height
     coordinate: QtPositioning.coordinate(map.center.latitude, map.center.longitude)
 
-    z: dragArea.drag.active || dragArea.pressed ? 2 : 1
-
     Drag.active: dragArea.drag.active
-    Drag.hotSpot.x: 20
-    Drag.hotSpot.y: 20
-
 
     signal setUserMarkerPosition;
 
@@ -39,6 +36,7 @@ MapQuickItem {
             user_map_marker.Drag.drop();
 
         }
+
     }
 
 

@@ -81,7 +81,6 @@ Page {
                     onClicked: {
 
                         map.state = "show_reviews"
-                        console.log("Show reviews state")
 
                     }
 
@@ -121,7 +120,6 @@ Page {
 
                         map.state = "build_route"
                         user_map_marker.coordinate = map.center
-                        console.log("Build route state")
 
                     }
 
@@ -160,7 +158,6 @@ Page {
 
                         map.state = "add_cafe"
                         user_map_marker.coordinate = map.center
-                        console.log("Add cafe state")
 
                     }
 
@@ -247,9 +244,40 @@ Page {
 
                 id: user_map_marker
 
-                //coordinate: map.center
-
                 visible: false
+
+            }
+
+            RouteModel {
+
+                id: route_model
+                plugin: map.plugin
+                autoUpdate: true
+
+                query: RouteQuery {
+
+                    id: route_query
+                    routeOptimizations: RouteQuery.ShortestRoute
+
+                }
+
+            }
+
+            MapItemView {
+
+                id: route_view
+                model: route_model
+                delegate: Component {
+
+                    MapRoute {
+
+                        route: routeData
+                        line.color: flamenco_orange
+                        line.width: 4
+
+                    }
+
+                }
 
             }
 
@@ -263,11 +291,6 @@ Page {
 
             }
 
-            function onEntered(drag) {
-
-                console.log("Drag entered!");
-
-            }
 
             DropArea {
 
@@ -282,13 +305,11 @@ Page {
                     map.user_marker_latitude = coord.latitude;
                     map.user_marker_longitude = coord.longitude;
 
+                    route_query.clearWaypoints();
+                    route_model.reset();
+                    route_query.addWaypoint(QtPositioning.coordinate(coord.latitude, coord.longitude));
+
                 }
-
-            }
-
-            Component.onCompleted: {
-
-                dropAreaRed.entered.connect(onEntered)
 
             }
 
@@ -296,13 +317,86 @@ Page {
 
         Rectangle {
 
-            id: filters_rectangle
+            id: lower_rectangle
             width: map_header_row.width
             height: parent.height*0.1
             color: dark_brown
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: map.bottom
+
+            Item {
+
+                id: build_route_elements
+
+                width: parent.width
+                height: parent.height
+
+                property real distance
+
+                visible: map.state === "build_route"
+
+                Text {
+
+                    id: route_length_title
+                    text: "Длина маршрута:"
+                    horizontalAlignment: Text.AlignLeft
+                    font.pointSize: 14
+                    color: pale
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 20
+
+                }
+
+                Text {
+
+                    id: route_length_value
+                    text: build_route_elements.distance
+                    font.pointSize: 14
+                    color: orange
+                    anchors.left: route_length_title.right
+                    anchors.verticalCenter: route_length_title.verticalCenter
+                    anchors.rightMargin: 10
+
+                }
+
+                CustomButton {
+
+                    id: rebuild_route_button
+                    button_width: 150
+                    button_height: 40
+
+                    border_width: 0
+                    button_radius: 20
+                    button_text: "Новый маршрут"
+                    text_color: light_sand
+                    text_color_hovered: "white"
+                    font_point_size: 12
+                    rect_color: light_brown
+                    rect_color_hovered: orange
+
+                    anchors.verticalCenter: route_length_value.verticalCenter
+                    anchors.right: parent.right
+                    anchors.leftMargin: 20
+
+                }
+
+                Connections {
+
+                    target: rebuild_route_button
+
+                    function onButtonClickedSignal() {
+
+                        route_query.clearWaypoints();
+                        route_model.reset();
+
+                    }
+
+                }
+
+            }
+
 
         }
 
@@ -403,18 +497,31 @@ Page {
 
                         onClicked: {
 
-                            Client.onGetCafeReviews(model.cafe_id);
+                            if (map.state === "show_reviews") {
 
-                            reviews_page.cafe_id = model.cafe_id;
-                            reviews_page.cafe_name = model.name;
-                            reviews_page.cafe_address = model.street + ", " + model.house_number;
-                            reviews_page.cafe_rating = model.average_rating;
+                                Client.onGetCafeReviews(model.cafe_id);
 
-                            reviews_page.city = model.city;
-                            reviews_page.street = model.street;
-                            reviews_page.house_number = model.house_number;
-                            reviews_page.latitude = model.latitude;
-                            reviews_page.longitude = model.longitude;
+                                reviews_page.cafe_id = model.cafe_id;
+                                reviews_page.cafe_name = model.name;
+                                reviews_page.cafe_address = model.street + ", " + model.house_number;
+                                reviews_page.cafe_rating = model.average_rating;
+
+                                reviews_page.city = model.city;
+                                reviews_page.street = model.street;
+                                reviews_page.house_number = model.house_number;
+                                reviews_page.latitude = model.latitude;
+                                reviews_page.longitude = model.longitude;
+
+                            } else if (map.state === "build_route") {
+
+                                route_query.addWaypoint(QtPositioning.coordinate(model.latitude, model.longitude));
+                                //build_route_elements.distance = route_query.get();
+
+                            } else if (map.state === "add_cafe") {
+
+
+
+                            }
 
                         }
 
