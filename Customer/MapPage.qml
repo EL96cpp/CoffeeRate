@@ -78,6 +78,13 @@ Page {
                     hoverEnabled: true
                     anchors.fill: parent
 
+                    onClicked: {
+
+                        map.state = "show_reviews"
+                        console.log("Show reviews state")
+
+                    }
+
                 }
 
             }
@@ -110,6 +117,14 @@ Page {
                     hoverEnabled: true
                     anchors.fill: parent
 
+                    onClicked: {
+
+                        map.state = "build_route"
+                        user_map_marker.coordinate = map.center
+                        console.log("Build route state")
+
+                    }
+
                 }
 
             }
@@ -141,6 +156,14 @@ Page {
                     hoverEnabled: true
                     anchors.fill: parent
 
+                    onClicked: {
+
+                        map.state = "add_cafe"
+                        user_map_marker.coordinate = map.center
+                        console.log("Add cafe state")
+
+                    }
+
                 }
 
             }
@@ -151,17 +174,60 @@ Page {
 
             id: map
             width: parent.width*0.9
-            height: parent.height*0.8
+            height: parent.height*0.7
             plugin: mapPlugin
             center: QtPositioning.coordinate(55.755, 37.617)
             zoomLevel: 15
             minimumZoomLevel: 11
             maximumZoomLevel: 20
 
+            states: [
+
+                State {
+
+                    name: "show_reviews"
+
+                    PropertyChanges {
+                        target: user_map_marker
+                        visible: false
+                    }
+
+                },
+
+                State {
+
+                    name: "build_route"
+
+                    PropertyChanges {
+                        target: user_map_marker
+                        visible: true
+                    }
+
+                },
+
+                State {
+
+                    name: "add_cafe"
+
+                    PropertyChanges {
+                        target: user_map_marker
+                        visible: true
+                    }
+
+                }
+
+            ]
+
+            state: "show_reviews"
+
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: map_header_row.bottom
 
             property geoCoordinate startCentroid
+
+            property string user_marker_latitude
+            property string user_marker_longitude
+
 
             onZoomLevelChanged: {
 
@@ -177,6 +243,15 @@ Page {
 
             }
 
+            UserMapMarker {
+
+                id: user_map_marker
+
+                //coordinate: map.center
+
+                visible: false
+
+            }
 
             MapItemView {
 
@@ -188,7 +263,46 @@ Page {
 
             }
 
+            function onEntered(drag) {
 
+                console.log("Drag entered!");
+
+            }
+
+            DropArea {
+
+                id: dropAreaRed
+
+                anchors.fill: parent
+
+                onDropped: (drop) => {
+
+                    var coord = map.toCoordinate(Qt.point(drop.x, drop.y));
+                    console.log("latitude:" + coord.latitude + ", longitude:" + coord.longitude);
+                    map.user_marker_latitude = coord.latitude;
+                    map.user_marker_longitude = coord.longitude;
+
+                }
+
+            }
+
+            Component.onCompleted: {
+
+                dropAreaRed.entered.connect(onEntered)
+
+            }
+
+        }
+
+        Rectangle {
+
+            id: filters_rectangle
+            width: map_header_row.width
+            height: parent.height*0.1
+            color: dark_brown
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: map.bottom
 
         }
 
